@@ -1,4 +1,5 @@
 ﻿using OperationResults.Services;
+using OperationResults.Services.Parameters;
 
 namespace OperationResults.Tests.OperationServicesGenericTests.ClassTests; 
 
@@ -18,7 +19,7 @@ public class NotFoundOperationTests
     {
         this.ResetResult();
 
-        OperationService<string>.NotFound(this.result);
+        OperationService.NotFound(this.result);
 
         using var _ = new AssertionScope();
         this.result.State.Should().Be(OperationResultState.NotFound);
@@ -28,13 +29,15 @@ public class NotFoundOperationTests
     public void FailOperationWithLog()
     {
         this.ResetResult();
-        var logMessage = LogMessage;
 
-        OperationService<string>.NotFound(this.result,
-            () => logMessage = LogMessage);
+        OperationService.NotFound(this.result,
+            new LogOperationParam<string>(Log, LogMessage));
 
         using var _ = new AssertionScope();
         this.result.State.Should().Be(OperationResultState.NotFound);
-        logMessage.Should().Be(LogMessage);
+    }
+
+    private static void Log(string logMessage)
+    {
     }
 }

@@ -1,53 +1,55 @@
-﻿namespace OperationResults.Services;
+﻿using OperationResults.Services.Parameters.Interfaces;
 
-public static class OperationService
+namespace OperationResults.Services;
+
+public static partial class OperationService
 {
     public static async Task<IOperationResult> DoOperationAsync(
-        Func<IOperationResult, Task> operation, 
-        Action<string>? logError = null)
+        IOperationAsyncParam operation,
+        ILogOperationWithSuffixParam? log = null)
     {
         var result = OperationResultFactory.Create();
         try
         {
-            await operation(result);
+            await operation.InvokeAsync(result);
         }
         catch (Exception ex)
         {
-            FailOperation(ex, result, logError);
+            FailOperation(ex, result, log);
         }
         return result;
     }
 
     public static IOperationResult DoOperation(
-        Action<IOperationResult> operation, 
-        Action<string>? logError = null)
+        IOperationParam operation, 
+        ILogOperationWithSuffixParam? log = null)
     {
         var result = OperationResultFactory.Create();
         try
         {
-            operation(result);
+            operation.Invoke(result);
         }
         catch (Exception ex)
         {
-            FailOperation(ex, result, logError);
+            FailOperation(ex, result, log);
         }
         return result;
     }
 
     public static void FailOperation(
-        Exception ex, 
-        IOperationResult result, 
-        Action<string>? logError = null)
+    Exception ex,
+    IOperationResult result,
+    ILogOperationWithSuffixParam? log = null)
     {
-        logError?.Invoke($". Error: {ex.Message}");
+        log?.Invoke($". Error: {ex.Message}");
         result.Fail(ex);
     }
 
     public static void NotFound(
-        IOperationResult result, 
-        Action? logWarning = null)
+        IOperationResult result,
+        ILogOperationParam? log = null)
     {
-        logWarning?.Invoke();
+        log?.Invoke();
         result.NotFound();
     }
 }

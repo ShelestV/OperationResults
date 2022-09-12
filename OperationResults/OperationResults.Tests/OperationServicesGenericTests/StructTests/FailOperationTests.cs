@@ -1,4 +1,5 @@
 ﻿using OperationResults.Services;
+using OperationResults.Services.Parameters;
 
 namespace OperationResults.Tests.OperationServicesGenericTests.StructTests;
 
@@ -19,7 +20,7 @@ public class FailOperationTests
     {
         this.ResetResult();
 
-        OperationService<Guid>.FailOperation(this.exception, this.result);
+        OperationService.FailOperation(this.exception, this.result);
 
         using var _ = new AssertionScope();
         this.result.State.Should().Be(OperationResultState.BadFlow);
@@ -30,16 +31,17 @@ public class FailOperationTests
     public void FailOperationWithLog()
     {
         this.ResetResult();
-        var logMessage = LogMessage;
 
-        OperationService<Guid>.FailOperation(this.exception, this.result,
-            (logSuffix) => logMessage = LogMessage + logSuffix);
+        OperationService.FailOperation(this.exception, this.result,
+            new LogOperationWithSuffixParam<string>(Log, LogMessage));
 
         using var _ = new AssertionScope();
         this.result.State.Should().Be(OperationResultState.BadFlow);
         this.result.Exception.Should().Be(this.exception);
-        logMessage.Should().NotBe(LogMessage);
-        logMessage.Should().Contain(LogMessage);
-        logMessage.Should().Contain(this.exception.Message);
+    }
+
+    private void Log(string logSuffix, string logMessage)
+    {
+        logSuffix.Should().Contain(this.exception.Message);
     }
 }

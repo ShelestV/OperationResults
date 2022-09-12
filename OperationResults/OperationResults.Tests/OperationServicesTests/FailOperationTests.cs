@@ -1,4 +1,5 @@
 ﻿using OperationResults.Services;
+using OperationResults.Services.Parameters;
 
 namespace OperationResults.Tests.OperationServicesTests;
 
@@ -30,16 +31,17 @@ public class FailOperationTests
     public void FailOperationWithLog()
     {
         this.ResetResult();
-        var logMessage = LogMessage;
 
         OperationService.FailOperation(this.exception, this.result,
-            (logSuffix) => logMessage = LogMessage + logSuffix);
+            new LogOperationWithSuffixParam<string>(Log, LogMessage));
 
         using var _ = new AssertionScope();
         this.result.State.Should().Be(OperationResultState.BadFlow);
         this.result.Exception.Should().Be(this.exception);
-        logMessage.Should().NotBe(LogMessage);
-        logMessage.Should().Contain(LogMessage);
-        logMessage.Should().Contain(this.exception.Message);
+    }
+
+    private void Log(string errorSuffix, string errorMessage)
+    {
+        errorSuffix.Should().Contain(this.exception.Message);
     }
 }

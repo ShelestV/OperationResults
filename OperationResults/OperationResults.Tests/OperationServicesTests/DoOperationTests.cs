@@ -1,69 +1,81 @@
 ﻿using OperationResults.Services;
+using OperationResults.Services.Parameters;
 
 namespace OperationResults.Tests.OperationServicesTests;
 
 public class DoOperationTests
 {
     private const string LogMessage = "Test message";
+    private readonly Exception exception = new("Test exception");
 
     [Fact]
     public void DoOperationSuccessTest()
     {
-        var logMessage = LogMessage;
-
         var result = OperationService.DoOperation(
-            (result) => result.Done(),
-            (logSuffix) => logMessage = LogMessage + logSuffix);
+            new DoOperationParam(DoneOperation), 
+            new LogOperationWithSuffixParam<string>(Log, LogMessage));
 
         using var _ = new AssertionScope();
         result.State.Should().Be(OperationResultState.Ok);
-        logMessage.Should().Be(LogMessage);
     }
 
     [Fact]
     public void DoOperationFailTest()
     {
-        var logMessage = LogMessage;
-        var exception = new Exception("Test exception");
-
         var result = OperationService.DoOperation(
-            (result) => result.Fail(exception),
-            (logSuffix) => logMessage = LogMessage + logSuffix);
+            new DoOperationParam<Exception>(FailOperation, this.exception),
+            new LogOperationWithSuffixParam<string>(Log, LogMessage));
 
         using var _ = new AssertionScope();
         result.State.Should().Be(OperationResultState.BadFlow);
         result.Exception.Should().Be(exception);
-        logMessage.Should().Be(LogMessage);
     }
 
     [Fact]
     public void DoOperationFailWithExceptionThrowingTest()
     {
-        var logMessage = LogMessage;
-        var exception = new Exception("Test exception");
-
         var result = OperationService.DoOperation(
-            (result) => throw exception,
-            (logSuffix) => logMessage = LogMessage + logSuffix);
+            new DoOperationParam<Exception>(ThrowException, this.exception),
+            new LogOperationWithSuffixParam<string>(Log, LogMessage));
 
         using var _ = new AssertionScope();
         result.State.Should().Be(OperationResultState.BadFlow);
         result.Exception.Should().Be(exception);
-        logMessage.Should().NotBe(LogMessage);
-        logMessage.Should().Contain(logMessage);
     }
 
     [Fact]
     public void DoOperationNotFoundTest()
     {
-        var logMessage = LogMessage;
-
         var result = OperationService.DoOperation(
-            (result) => result.NotFound(),
-            (logSuffix) => logMessage = LogMessage + logSuffix);
+            new DoOperationParam(NotFound),
+            new LogOperationWithSuffixParam<string>(Log, LogMessage));
 
         using var _ = new AssertionScope();
         result.State.Should().Be(OperationResultState.NotFound);
-        logMessage.Should().Be(LogMessage);
+    }
+
+    private static void DoneOperation(IOperationResult result)
+    {
+        result.Done();
+    }
+
+    private static void FailOperation(IOperationResult result, Exception ex)
+    {
+        result.Fail(ex);
+    }
+
+    private static void ThrowException(IOperationResult result, Exception ex)
+    {
+        throw ex;
+    }
+
+    private static void NotFound(IOperationResult result)
+    {
+        result.NotFound();
+    }
+
+    private void Log(string errorSuffix, string errorMessage)
+    {
+        errorSuffix.Should().Contain(this.exception.Message);
     }
 }

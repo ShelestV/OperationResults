@@ -1,55 +1,56 @@
 ﻿using OperationResults.Generic;
+using OperationResults.Services.Parameters.Interfaces;
 
 namespace OperationResults.Services;
 
-public class OperationService<TResult>
+public static partial class OperationService
 {
-    public static async Task<IOperationResult<TResult>> DoOperationAsync(
-        Func<IOperationResult<TResult>, Task> operation, 
-        Action<string>? logError = null)
+    public static async Task<IOperationResult<TResult>> DoOperationAsync<TResult>(
+         IOperationAsyncParam<TResult> operation,
+         ILogOperationWithSuffixParam? log = null)
     {
         var result = OperationResultFactory.Create<TResult>();
         try
         {
-            await operation(result);
+            await operation.InvokeAsync(result);
         }
         catch (Exception ex)
         {
-            FailOperation(ex, result, logError);
+            FailOperation(ex, result, log);
         }
         return result;
     }
 
-    public static IOperationResult<TResult> DoOperation(
-        Action<IOperationResult<TResult>> operation, 
-        Action<string>? logError = null)
+    public static IOperationResult<TResult> DoOperation<TResult>(
+        IOperationParam<TResult> operation, 
+        ILogOperationWithSuffixParam? log = null)
     {
         var result = OperationResultFactory.Create<TResult>();
         try
         {
-            operation(result);
+            operation.Invoke(result);
         }
         catch (Exception ex)
         {
-            FailOperation(ex, result, logError);
+            FailOperation(ex, result, log);
         }
         return result;
     }
 
-    public static void FailOperation(
-        Exception ex, 
-        IOperationResult<TResult> result, 
-        Action<string>? logError = null)
+    public static void FailOperation<TResult>(
+        Exception ex,
+        IOperationResult<TResult> result,
+        ILogOperationWithSuffixParam? log = null)
     {
-        logError?.Invoke($". Error: {ex.Message}");
+        log?.Invoke($". Error: {ex.Message}");
         result.Fail(ex);
     }
 
-    public static void NotFound(
-        IOperationResult<TResult> result, 
-        Action? logWarning = null)
+    public static void NotFound<TResult>(
+        IOperationResult<TResult> result,
+        ILogOperationParam? log = null)
     {
-        logWarning?.Invoke();
+        log?.Invoke();
         result.NotFound();
     }
 }
