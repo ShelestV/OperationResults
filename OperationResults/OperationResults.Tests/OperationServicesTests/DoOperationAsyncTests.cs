@@ -11,9 +11,9 @@ public class DoOperationAsyncTests
     [Fact]
     public async Task DoOperationAsyncSuccessTest()
     {
-        var result = await OperationService.DoOperationAsync(
-            new DoOperationAsyncParam(DoOperationAsync),
-            new LogOperationWithSuffixParam<string>(Log, LogMessage));
+        var operationParam = ParamsFactory.CreateParam(DoOperationAsync);
+        var logParam = ParamsFactory.CreateLogParam(Log, LogMessage);
+        var result = await OperationService.DoOperationAsync(operationParam, logParam);
 
         using var _ = new AssertionScope();
         result.State.Should().Be(OperationResultState.Ok);
