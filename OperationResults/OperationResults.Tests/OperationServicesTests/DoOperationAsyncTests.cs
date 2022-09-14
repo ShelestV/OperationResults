@@ -11,8 +11,8 @@ public class DoOperationAsyncTests
     [Fact]
     public async Task DoOperationAsyncSuccessTest()
     {
-        var operationParam = ParamsFactory.CreateParam(DoOperationAsync);
-        var logParam = ParamsFactory.CreateLogParam(Log, LogMessage);
+        var operationParam = ParamsFactory.Create(DoOperationAsync);
+        var logParam = ParamsFactory.Create(Log, LogMessage);
         var result = await OperationService.DoOperationAsync(operationParam, logParam);
 
         using var _ = new AssertionScope();
@@ -23,8 +23,8 @@ public class DoOperationAsyncTests
     public async Task DoOperationAsyncFailTest()
     {
         var result = await OperationService.DoOperationAsync(
-            new DoOperationAsyncParam<Exception>(FailOperationAsync, this.exception),
-            new LogOperationWithSuffixParam<string>(Log, LogMessage));
+            ParamsFactory.Create(FailOperationAsync, this.exception),
+            ParamsFactory.Create(Log, LogMessage));
 
         using var _ = new AssertionScope();
         result.State.Should().Be(OperationResultState.BadFlow);
@@ -35,8 +35,8 @@ public class DoOperationAsyncTests
     public async Task DoOperationAsyncFailWithExceptionThrowingTest()
     {
         var result = await OperationService.DoOperationAsync(
-            new DoOperationAsyncParam<Exception>(ThrowExceptionAsync, this.exception),
-            new LogOperationWithSuffixParam<string>(Log, LogMessage));
+            ParamsFactory.Create(ThrowExceptionAsync, this.exception),
+            ParamsFactory.Create(Log, LogMessage));
 
         using var _ = new AssertionScope();
         result.State.Should().Be(OperationResultState.BadFlow);
@@ -47,8 +47,8 @@ public class DoOperationAsyncTests
     public async Task DoOperationAsyncNotFoundTest()
     {
         var result = await OperationService.DoOperationAsync(
-            new DoOperationAsyncParam(NotFoundAsync),
-            new LogOperationWithSuffixParam<string>(Log, LogMessage));
+            ParamsFactory.Create(NotFoundAsync),
+            ParamsFactory.Create(Log, LogMessage));
 
         using var _ = new AssertionScope();
         result.State.Should().Be(OperationResultState.NotFound);
