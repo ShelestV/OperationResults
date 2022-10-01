@@ -1,9 +1,10 @@
 ﻿using OperationResults.Services.Delegates;
+using OperationResults.Services.LogDelegates;
 using OperationResults.Services.Parameters.Interfaces;
 
 namespace OperationResults.Services.Parameters;
 
-public static class ParamsFactory
+public static partial class ParamsFactory
 {
     public static IOperationAsyncParam Create(DoOperationAsync operation)
     {

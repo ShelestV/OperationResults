@@ -1,11 +1,39 @@
 ﻿using OperationResults.Generic;
+using OperationResults.Services.Delegates.Generic;
+using OperationResults.Services.LogDelegates;
+using OperationResults.Services.Parameters;
 using OperationResults.Services.Parameters.Interfaces;
 
 namespace OperationResults.Services;
 
 public static partial class OperationService
 {
-    public static async Task<IOperationResult<TResult>> DoOperationAsync<TResult>(
+	public static async Task<IOperationResult<TResult>> DoOperationAsync<TResult>(
+	DoOperationAsync<TResult> operation,
+	ILogOperationWithSuffixParam? log = null)
+	{
+		var param = ParamsFactory.CreateWithResult(operation);
+		return await DoOperationAsync(param, log);
+	}
+
+	public static async Task<IOperationResult<TResult>> DoOperationAsync<TResult>(
+		IOperationAsyncParam<TResult> operation,
+		Log<string>? log = null)
+	{
+		var logParam = log is not null ? ParamsFactory.Create(log) : null;
+		return await DoOperationAsync(operation, logParam);
+	}
+
+	public static async Task<IOperationResult<TResult>> DoOperationAsync<TResult>(
+		DoOperationAsync<TResult> operation,
+		Log<string>? log = null)
+	{
+		var operationParam = ParamsFactory.CreateWithResult(operation);
+		var logParam = log is not null ? ParamsFactory.Create(log) : null;
+		return await DoOperationAsync(operationParam, logParam);
+	}
+
+	public static async Task<IOperationResult<TResult>> DoOperationAsync<TResult>(
          IOperationAsyncParam<TResult> operation,
          ILogOperationWithSuffixParam? log = null)
     {
@@ -21,7 +49,32 @@ public static partial class OperationService
         return result;
     }
 
-    public static IOperationResult<TResult> DoOperation<TResult>(
+	public static IOperationResult<TResult> DoOperation<TResult>(
+		DoOperation<TResult> operation,
+		ILogOperationWithSuffixParam? log = null)
+	{
+		var param = ParamsFactory.CreateWithResult(operation);
+		return DoOperation(param, log);
+	}
+
+	public static IOperationResult<TResult> DoOperation<TResult>(
+		IOperationParam<TResult> operation,
+		Log<string>? log = null)
+	{
+		var logParam = log is not null ? ParamsFactory.Create(log) : null;
+		return DoOperation(operation, logParam);
+	}
+
+	public static IOperationResult<TResult> DoOperation<TResult>(
+		DoOperation<TResult> operation,
+		Log<string>? log = null)
+	{
+		var operationParam = ParamsFactory.CreateWithResult(operation);
+		var logParam = log is not null ? ParamsFactory.Create(log) : null;
+		return DoOperation(operationParam, logParam);
+	}
+
+	public static IOperationResult<TResult> DoOperation<TResult>(
         IOperationParam<TResult> operation, 
         ILogOperationWithSuffixParam? log = null)
     {
