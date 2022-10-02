@@ -8,22 +8,68 @@ public class DoOperationTests
     private const string LogMessage = "Test message";
     private readonly Exception exception = new("Test exception");
 
-    [Fact]
-    public void DoOperationSuccessTest()
-    {
-        var logMessage = LogMessage;
-        var guid = Guid.NewGuid();
+    private static readonly Guid GuidResult = Guid.Parse("36cf91f0-afb2-4748-b313-dd31cb368f5e");
 
-        var result = OperationService.DoOperation(
-            new Services.Parameters.Generic.DoOperationParam<Guid, Guid>(DoneOperation, guid),
-            new LogOperationWithSuffixParam<string>(Log, logMessage));
+	[Fact]
+	public void DoOperation_Success_Delegate_WithoutLog_Test()
+	{
+		var result = OperationService.DoOperation<Guid>(DoneOperation);
 
-        using var _ = new AssertionScope();
-        result.State.Should().Be(OperationResultState.Ok);
-        result.Result.Should().Be(guid);
-    }
+		using var _ = new AssertionScope();
+		result.State.Should().Be(OperationResultState.Ok);
+		result.Result.Should().Be(GuidResult);
+	}
 
-    [Fact]
+	[Fact]
+	public void DoOperation_Success_Param_WithoutLog_Test()
+	{
+		var operationParam = new Services.Parameters.Generic.DoOperationParam<Guid>(DoneOperation);
+
+		var result = OperationService.DoOperation(operationParam);
+
+		using var _ = new AssertionScope();
+		result.State.Should().Be(OperationResultState.Ok);
+		result.Result.Should().Be(GuidResult);
+	}
+
+	[Fact]
+	public void DoOperation_FailWithExceptionThrowing_Param_WithoutLog_Test()
+	{
+		var operationParam = new Services.Parameters.Generic.DoOperationParam<Guid, Exception>(ThrowException, this.exception);
+
+		var result = OperationService.DoOperation(operationParam);
+
+		using var _ = new AssertionScope();
+		result.State.Should().Be(OperationResultState.BadFlow);
+		result.Exception.Should().Be(this.exception);
+	}
+
+	[Fact]
+	public void DoOperation_Success_Delegate_Test()
+	{
+		var logParam = new LogOperationWithSuffixParam<string>(Log, LogMessage);
+
+		var result = OperationService.DoOperation<Guid>(DoneOperation, logParam);
+
+		using var _ = new AssertionScope();
+		result.State.Should().Be(OperationResultState.Ok);
+		result.Result.Should().Be(GuidResult);
+	}
+
+	[Fact]
+	public void DoOperation_Success_Param_Test()
+	{
+		var operationParam = new Services.Parameters.Generic.DoOperationParam<Guid>(DoneOperation);
+		var logParam = new LogOperationWithSuffixParam<string>(Log, LogMessage);
+
+		var result = OperationService.DoOperation(operationParam, logParam);
+
+		using var _ = new AssertionScope();
+		result.State.Should().Be(OperationResultState.Ok);
+		result.Result.Should().Be(GuidResult);
+	}
+
+	[Fact]
     public void DoOperationFailTest()
     {
         var logMessage = LogMessage;
@@ -64,9 +110,9 @@ public class DoOperationTests
         result.State.Should().Be(OperationResultState.NotFound);
     }
 
-    private static void DoneOperation(IOperationResult<Guid> result, Guid guid)
+    private static void DoneOperation(IOperationResult<Guid> result)
     {
-        result.Done(guid);
+        result.Done(GuidResult);
     }
 
     private static void FailOperation(IOperationResult<Guid> result, Exception ex)

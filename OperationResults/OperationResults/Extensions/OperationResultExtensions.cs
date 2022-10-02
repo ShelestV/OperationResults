@@ -21,8 +21,6 @@ public static class OperationResultExtensions
 				break;
 			case OperationResultState.Processing:
 				throw new OperationStillProcessingException();
-			default:
-				throw new IncorrectOperationResultStateException();
 		}
 		return genericOperationResult;
 	}
@@ -43,8 +41,6 @@ public static class OperationResultExtensions
 				break;
 			case OperationResultState.Processing:
 				throw new OperationStillProcessingException();
-			default:
-				throw new IncorrectOperationResultStateException();
 		}
 		return operationResult;
 	}
@@ -65,15 +61,13 @@ public static class OperationResultExtensions
 				break;
 			case OperationResultState.Processing:
 				throw new OperationStillProcessingException();
-			default:
-				throw new IncorrectOperationResultStateException();
 		}
 		return outOperationResult;
 	}
 
 	private static void SetResult<TResult>(IOperationResult<TResult> operationResult, TResult? result)
 	{
-		if (EqualityComparer<TResult>.Default.Equals(result))
+		if (EqualityComparer<TResult>.Default.Equals(result, default(TResult)))
 			operationResult.Fail(new ArgumentException("Operation result is invalid"));
 		else
 			operationResult.Done(result!);
