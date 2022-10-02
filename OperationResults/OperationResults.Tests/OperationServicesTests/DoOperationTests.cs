@@ -9,15 +9,70 @@ public class DoOperationTests
     private readonly Exception exception = new("Test exception");
 
     [Fact]
-    public void DoOperationSuccessTest()
+    public void DoOperation_Success_Delegate_WithoutLog_Test()
     {
-        var result = OperationService.DoOperation(
-            new DoOperationParam(DoneOperation), 
-            new LogOperationWithSuffixParam<string>(Log, LogMessage));
+        var result = OperationService.DoOperation(DoneOperation);
 
         using var _ = new AssertionScope();
         result.State.Should().Be(OperationResultState.Ok);
     }
+
+	[Fact]
+	public void DoOperation_Success_Param_WithoutLog_Test()
+	{
+        var operationParam = new DoOperationParam(DoneOperation);
+
+		var result = OperationService.DoOperation(operationParam);
+
+		using var _ = new AssertionScope();
+		result.State.Should().Be(OperationResultState.Ok);
+	}
+
+    [Fact]
+    public void DoOperation_Fail_Param_WithoutLog_Test()
+    {
+        var operationParam = new DoOperationParam<Exception>(ThrowException, this.exception);
+
+        var result = OperationService.DoOperation(operationParam);
+
+        using var _ = new AssertionScope();
+        result.State.Should().Be(OperationResultState.BadFlow);
+    }
+
+	[Fact]
+	public void DoOperation_Success_Delegate_Test()
+	{
+		var logParam = new LogOperationWithSuffixParam<string>(Log, LogMessage);
+
+		var result = OperationService.DoOperation(DoneOperation, logParam);
+
+		using var _ = new AssertionScope();
+		result.State.Should().Be(OperationResultState.Ok);
+	}
+
+	[Fact]
+    public void DoOperation_Success_Param_Test()
+    {
+        var operationParam = new DoOperationParam(DoneOperation);
+        var logParam = new LogOperationWithSuffixParam<string>(Log, LogMessage);
+
+        var result = OperationService.DoOperation(operationParam, logParam);
+
+        using var _ = new AssertionScope();
+        result.State.Should().Be(OperationResultState.Ok);
+    }
+
+    [Fact]
+    public void DoOperation_FailWithThrowingException_Param_Test()
+    {
+		var operationParam = new DoOperationParam<Exception>(ThrowException, this.exception);
+		var logParam = new LogOperationWithSuffixParam<string>(Log, LogMessage);
+
+		var result = OperationService.DoOperation(operationParam, logParam);
+
+		using var _ = new AssertionScope();
+		result.State.Should().Be(OperationResultState.BadFlow);
+	}
 
     [Fact]
     public void DoOperationFailTest()

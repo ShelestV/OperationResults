@@ -57,4 +57,16 @@ public class OperationResultsTests
         this.result.State.Should().Be(OperationResultState.NotFound);
         this.result.Invoking(x => x.Exception).Should().Throw<IncorrectOperationResultStateException>();
     }
+
+    [Fact]
+    public void FailOperationResult_NullException_Test()
+    {
+        this.ReserResult();
+
+        this.result.Fail(null);
+
+        using var _ = new AssertionScope();
+        this.result.State.Should().Be(OperationResultState.BadFlow);
+        this.result.Invoking(x => x.Exception).Should().Throw<OperationExceptionNullException>();
+    }
 }

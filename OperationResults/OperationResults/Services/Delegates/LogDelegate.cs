@@ -1,4 +1,4 @@
-﻿namespace OperationResults.Services.Delegates;
+﻿namespace OperationResults.Services.LogDelegates;
 
 public delegate void Log();
 public delegate void Log<T1>(T1 value1);

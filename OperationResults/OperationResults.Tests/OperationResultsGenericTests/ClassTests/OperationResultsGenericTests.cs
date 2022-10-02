@@ -1,4 +1,6 @@
-﻿namespace OperationResults.Tests._OperationResultsGenericTests.ClassTests;
+﻿using OperationResults.Exceptions;
+
+namespace OperationResults.Tests._OperationResultsGenericTests.ClassTests;
 
 public class OperationResultsGenericTests
 {
@@ -63,5 +65,31 @@ public class OperationResultsGenericTests
         this.result.State.Should().Be(OperationResultState.NotFound);
         this.result.Invoking(x => x.Exception).Should().Throw<IncorrectOperationResultStateException>();
         this.result.Invoking(x => x.Result).Should().Throw<IncorrectOperationResultStateException>();
+    }
+
+    [Fact]
+    public void FailOperationResult_NullException_Test()
+    {
+        this.ReserResult();
+
+        this.result.Fail(null);
+
+        using var _ = new AssertionScope();
+        this.result.State.Should().Be(OperationResultState.BadFlow);
+        this.result.Invoking(x => x.Exception).Should().Throw<OperationExceptionNullException>();
+        this.result.Invoking(x => x.Result).Should().Throw<IncorrectOperationResultStateException>();
+    }
+
+    [Fact]
+    public void DoneOperationResult_NullResult_Test()
+    {
+        this.ReserResult();
+
+        this.result.Done(null);
+
+        using var _ = new AssertionScope();
+        this.result.State.Should().Be(OperationResultState.Ok);
+        this.result.Invoking(x => x.Result).Should().Throw<OperationResultNullException>();
+        this.result.Invoking(x => x.Exception).Should().Throw<IncorrectOperationResultStateException>();
     }
 }
