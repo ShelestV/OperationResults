@@ -109,24 +109,26 @@ public class DoOperationTests
         result.State.Should().Be(OperationResultState.NotFound);
     }
 
-    private static void DoneOperation(IOperationResult<string> result)
+    private static string DoneOperation(IOperationResult<string> result)
     {
-        result.Done(StringResult);
+	    return StringResult;
     }
 
-    private static void FailOperation(IOperationResult<string> result, Exception ex)
+    private static string FailOperation(IOperationResult<string> result, Exception ex)
     {
         result.Fail(ex);
+        return string.Empty;
     }
 
-    private static void ThrowException(IOperationResult<string> result, Exception ex)
+    private static string ThrowException(IOperationResult<string> result, Exception ex)
     {
         throw ex;
     }
 
-    private static void NotFound(IOperationResult<string> result)
+    private static string NotFound(IOperationResult<string> result)
     {
         result.NotFound();
+        return string.Empty;
     }
 
     private void Log(string errorSuffix, string errorMessage)

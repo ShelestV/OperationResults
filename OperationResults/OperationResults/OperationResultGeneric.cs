@@ -24,9 +24,11 @@ public class OperationResult<TResult> :
 		}
 	}
 
-	public void Done(TResult result)
+	public void Done(TResult res)
 	{
+		if (!this.CouldChangeState()) return;
+		
 		this.State = OperationResultState.Ok;
-		this.result = result;
+		this.result = res;
 	}
 }

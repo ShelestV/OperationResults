@@ -13,8 +13,8 @@ public class DoOperationAsyncParam<TResult> : IOperationAsyncParam<TResult>
         this.operation = operation;
     }
 
-    public async Task InvokeAsync(IOperationResult<TResult> result)
+    public async Task<TResult> InvokeAsync(IOperationResult<TResult> result)
     {
-        await this.operation.Invoke(result);
+        return await this.operation.Invoke(result);
     }
 }

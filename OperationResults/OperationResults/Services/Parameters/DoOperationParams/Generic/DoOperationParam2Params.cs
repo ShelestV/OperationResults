@@ -17,8 +17,8 @@ public sealed class DoOperationParam<TResult, T1, T2> : IOperationParam<TResult>
         this.value2 = value2;
     }
 
-    public void Invoke(IOperationResult<TResult> result)
+    public TResult Invoke(IOperationResult<TResult> result)
     {
-        this.operation.Invoke(result, this.value1, this.value2);
+        return this.operation.Invoke(result, this.value1, this.value2);
     }
 }

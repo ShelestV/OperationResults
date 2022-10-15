@@ -8,19 +8,23 @@ namespace OperationResults.Services;
 public static partial class OperationService
 {
 	public static async Task<IOperationResult<TResult>> DoOperationAsync<TResult>(
-		DoOperationAsync<TResult> operation)
+		DoOperationAsync<TResult> operation,
+		bool finishOperation = true)
 	{
 		var operationParam = AsyncParamsFactory.CreateWithResult(operation);
-		return await DoOperationAsync(operationParam);
+		return await DoOperationAsync(operationParam, finishOperation);
 	}
 
 	public static async Task<IOperationResult<TResult>> DoOperationAsync<TResult>(
-         IOperationAsyncParam<TResult> operation)
+         IOperationAsyncParam<TResult> operation,
+         bool finishOperation = true)
     {
         var result = OperationResultFactory.Create<TResult>();
         try
         {
-            await operation.InvokeAsync(result);
+            var operationResult = await operation.InvokeAsync(result);
+            if (finishOperation)
+	            result.Done(operationResult);
         }
         catch (Exception ex) 
 		{
@@ -32,20 +36,24 @@ public static partial class OperationService
 
 	public static async Task<IOperationResult<TResult>> DoOperationAsync<TResult>(
 		DoOperationAsync<TResult> operation,
-		ILogOperationWithSuffixParam log)
+		ILogOperationWithSuffixParam log,
+		bool finishOperation = true)
 	{
 		var param = AsyncParamsFactory.CreateWithResult(operation);
-		return await DoOperationAsync(param, log);
+		return await DoOperationAsync(param, log, finishOperation);
 	}
 
 	public static async Task<IOperationResult<TResult>> DoOperationAsync<TResult>(
 		 IOperationAsyncParam<TResult> operation,
-		 ILogOperationWithSuffixParam log)
+		 ILogOperationWithSuffixParam log,
+		 bool finishOperation = true)
 	{
 		var result = OperationResultFactory.Create<TResult>();
 		try
 		{
-			await operation.InvokeAsync(result);
+			var operationResult = await operation.InvokeAsync(result);
+			if (finishOperation)
+				result.Done(operationResult);
 		}
 		catch (Exception ex)
 		{
@@ -55,19 +63,23 @@ public static partial class OperationService
 	}
 
 	public static IOperationResult<TResult> DoOperation<TResult>(
-		DoOperation<TResult> operation)
+		DoOperation<TResult> operation,
+		bool finishOperation = true)
 	{
 		var param = ParamsFactory.CreateWithResult(operation);
-		return DoOperation(param);
+		return DoOperation(param, finishOperation);
 	}
 
 	public static IOperationResult<TResult> DoOperation<TResult>(
-		IOperationParam<TResult> operation)
+		IOperationParam<TResult> operation,
+		bool finishOperation = true)
 	{
 		var result = OperationResultFactory.Create<TResult>();
 		try
 		{
-			operation.Invoke(result);
+			var operationResult = operation.Invoke(result);
+			if (finishOperation)
+				result.Done(operationResult);
 		}
 		catch (Exception ex)
 		{
@@ -78,20 +90,24 @@ public static partial class OperationService
 
 	public static IOperationResult<TResult> DoOperation<TResult>(
 		DoOperation<TResult> operation,
-		ILogOperationWithSuffixParam log)
+		ILogOperationWithSuffixParam log,
+		bool finishOperation = true)
 	{
 		var param = ParamsFactory.CreateWithResult(operation);
-		return DoOperation(param, log);
+		return DoOperation(param, log, finishOperation);
 	}
 
 	public static IOperationResult<TResult> DoOperation<TResult>(
         IOperationParam<TResult> operation, 
-        ILogOperationWithSuffixParam log)
+        ILogOperationWithSuffixParam log,
+        bool finishOperation = true)
     {
         var result = OperationResultFactory.Create<TResult>();
         try
         {
-            operation.Invoke(result);
+            var operationResult = operation.Invoke(result);
+            if (finishOperation)
+	            result.Done(operationResult);
         }
         catch (Exception ex)
         {

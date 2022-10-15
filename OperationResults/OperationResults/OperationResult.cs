@@ -6,6 +6,8 @@ public class OperationResult :
 {
 	public void Done()
 	{
+		if (!this.CouldChangeState()) return;
+		
 		this.State = OperationResultState.Ok;
 	}
 }

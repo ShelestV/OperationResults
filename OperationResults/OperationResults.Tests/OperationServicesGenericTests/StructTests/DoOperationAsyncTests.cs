@@ -59,7 +59,6 @@ public class DoOperationAsyncTests
 	[Fact]
 	public async Task DoOperationAsync_Success_Param_Test()
 	{
-        var operationParam = new Services.Parameters.Generic.DoOperationAsyncParam<Guid>(DoOperationAsync);
 		var logParam = new LogOperationWithSuffixParam<string>(Log, LogMessage);
 
 		var result = await OperationService.DoOperationAsync<Guid>(DoOperationAsync, logParam);
@@ -110,25 +109,26 @@ public class DoOperationAsyncTests
         result.State.Should().Be(OperationResultState.NotFound);
     }
 
-    private static async Task DoOperationAsync(IOperationResult<Guid> result)
+    private static Task<Guid> DoOperationAsync(IOperationResult<Guid> result)
     {
-        await Task.Run(() => result.Done(guid));
+	    return Task.FromResult(guid);
     }
 
-    private static async Task FailOperationAsync(IOperationResult<Guid> result, Exception ex)
+    private static Task<Guid> FailOperationAsync(IOperationResult<Guid> result, Exception ex)
     {
-        await Task.Run(() => result.Fail(ex));
+	    result.Fail(ex);
+	    return Task.FromResult(Guid.Empty);
     }
 
-    private static async Task ThrowExceptionAsync(IOperationResult<Guid> result, Exception ex)
+    private static Task<Guid> ThrowExceptionAsync(IOperationResult<Guid> result, Exception ex)
     {
-        await Task.Run(() => { });
         throw ex;
     }
 
-    private static async Task NotFoundAsync(IOperationResult<Guid> result)
+    private static Task<Guid> NotFoundAsync(IOperationResult<Guid> result)
     {
-        await Task.Run(() => result.NotFound());
+	    result.NotFound();
+	    return Task.FromResult(Guid.Empty);
     }
 
     private void Log(string errorSuffix, string errorMessage)

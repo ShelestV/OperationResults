@@ -7,5 +7,5 @@ public interface IOperationParam
 
 public interface IOperationParam<TResult>
 {
-    void Invoke(OperationResults.Generic.IOperationResult<TResult> result);
+    TResult Invoke(OperationResults.Generic.IOperationResult<TResult> result);
 }

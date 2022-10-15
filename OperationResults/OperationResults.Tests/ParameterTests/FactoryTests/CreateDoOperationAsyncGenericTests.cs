@@ -25,8 +25,6 @@ public sealed class CreateDoOperationAsyncGenericTests
 		var param = AsyncParamsFactory.CreateWithResult<int>(DoOperationAsync);
 
 		await param.InvokeAsync(result);
-
-		result.State.Should().Be(OperationResultState.Ok);
 	}
 
 	[Fact]
@@ -35,10 +33,8 @@ public sealed class CreateDoOperationAsyncGenericTests
 		this.Reset();
 
 		var param = AsyncParamsFactory.CreateWithResult<int, int>(DoOperationAsync, Value1);
-
+		
 		await param.InvokeAsync(result);
-
-		result.State.Should().Be(OperationResultState.Ok);
 	}
 
 	[Fact]
@@ -49,8 +45,6 @@ public sealed class CreateDoOperationAsyncGenericTests
 		var param = AsyncParamsFactory.CreateWithResult<int, int, string>(DoOperationAsync, Value1, Value2);
 
 		await param.InvokeAsync(result);
-
-		result.State.Should().Be(OperationResultState.Ok);
 	}
 
 	[Fact]
@@ -61,44 +55,34 @@ public sealed class CreateDoOperationAsyncGenericTests
 		var param = AsyncParamsFactory.CreateWithResult<int, int, string, double>(DoOperationAsync, Value1, Value2, Value3);
 
 		await param.InvokeAsync(result);
-
-		result.State.Should().Be(OperationResultState.Ok);
 	}
 
-	private Task DoOperationAsync(IOperationResult<int> result)
+	private static Task<int> DoOperationAsync(IOperationResult<int> result)
 	{
-		result.Done(SuccessResult);
-
-		return Task.CompletedTask;
+		return Task.FromResult(SuccessResult);
 	}
 
-	private Task DoOperationAsync(IOperationResult<int> result, int value1)
+	private static Task<int> DoOperationAsync(IOperationResult<int> result, int value1)
 	{
-		result.Done(SuccessResult);
-
 		value1.Should().Be(Value1);
 
-		return Task.CompletedTask;
+		return Task.FromResult(SuccessResult);
 	}
 
-	private Task DoOperationAsync(IOperationResult<int> result, int value1, string value2)
+	private static Task<int> DoOperationAsync(IOperationResult<int> result, int value1, string value2)
 	{
-		result.Done(SuccessResult);
-
 		value1.Should().Be(Value1);
 		value2.Should().Be(Value2);
 
-		return Task.CompletedTask;
+		return Task.FromResult(SuccessResult);
 	}
 
-	private Task DoOperationAsync(IOperationResult<int> result, int value1, string value2, double value3)
+	private static Task<int> DoOperationAsync(IOperationResult<int> result, int value1, string value2, double value3)
 	{
-		result.Done(SuccessResult);
-
 		value1.Should().Be(Value1);
 		value2.Should().Be(Value2);
 		value3.Should().Be(Value3);
 
-		return Task.CompletedTask;
+		return Task.FromResult(SuccessResult);
 	}
 }

@@ -7,5 +7,5 @@ public interface IOperationAsyncParam
 
 public interface IOperationAsyncParam<TResult>
 {
-    Task InvokeAsync(OperationResults.Generic.IOperationResult<TResult> result);
+    Task<TResult> InvokeAsync(OperationResults.Generic.IOperationResult<TResult> result);
 }

@@ -63,19 +63,19 @@ public sealed class CreateDoOperationTests
 		result.State.Should().Be(OperationResultState.Ok);
 	}
 
-	private void DoOperation(IOperationResult result)
+	private static void DoOperation(IOperationResult result)
 	{
 		result.Done();
 	}
 
-	private void DoOperation(IOperationResult result, int value1)
+	private static void DoOperation(IOperationResult result, int value1)
 	{
 		result.Done();
 
 		value1.Should().Be(Value1);
 	}
 
-	private void DoOperation(IOperationResult result, int value1, string value2)
+	private static void DoOperation(IOperationResult result, int value1, string value2)
 	{
 		result.Done();
 
@@ -83,7 +83,7 @@ public sealed class CreateDoOperationTests
 		value2.Should().Be(Value2);
 	}
 
-	private void DoOperation(IOperationResult result, int value1, string value2, double value3)
+	private static void DoOperation(IOperationResult result, int value1, string value2, double value3)
 	{
 		result.Done();
 

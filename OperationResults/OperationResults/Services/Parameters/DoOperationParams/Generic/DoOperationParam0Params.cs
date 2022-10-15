@@ -13,8 +13,8 @@ public sealed class DoOperationParam<TResult> : IOperationParam<TResult>
         this.operation = operation;
     }
 
-    public void Invoke(IOperationResult<TResult> result)
+    public TResult Invoke(IOperationResult<TResult> result)
     {
-        this.operation.Invoke(result);
+        return this.operation.Invoke(result);
     }
 }

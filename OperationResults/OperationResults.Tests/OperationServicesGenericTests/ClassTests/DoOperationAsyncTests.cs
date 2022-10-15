@@ -8,7 +8,7 @@ public class DoOperationAsyncTests
     private const string LogMessage = "Test message";
     private readonly Exception exception = new("Test exception");
 
-    private static readonly string StringResult = "Success";
+    private const string StringResult = "Success";
 
     [Fact]
     public async Task DoOperationAsync_Success_Delegate_WithoutLog_Test()
@@ -110,25 +110,26 @@ public class DoOperationAsyncTests
         result.State.Should().Be(OperationResultState.NotFound);
     }
 
-    private static async Task DoOperationAsync(IOperationResult<string> result)
+    private static Task<string> DoOperationAsync(IOperationResult<string> result)
     {
-        await Task.Run(() => result.Done(StringResult));
+        return Task.FromResult(StringResult);
     }
 
-    private static async Task FailOperationAsync(IOperationResult<string> result, Exception ex)
+    private static Task<string> FailOperationAsync(IOperationResult<string> result, Exception ex)
     {
-        await Task.Run(() => result.Fail(ex));
+        result.Fail(ex);
+        return Task.FromResult(string.Empty);
     }
 
-    private static async Task ThrowExceptionAsync(IOperationResult<string> result, Exception ex)
+    private static Task<string> ThrowExceptionAsync(IOperationResult<string> result, Exception ex)
     {
-        await Task.Run(() => { });
         throw ex;
     }
 
-    private static async Task NotFoundAsync(IOperationResult<string> result)
+    private static Task<string> NotFoundAsync(IOperationResult<string> result)
     {
-        await Task.Run(() => result.NotFound());
+	    result.NotFound();
+	    return Task.FromResult(string.Empty);
     }
 
     private void Log(string errorSuffix, string errorMessage)

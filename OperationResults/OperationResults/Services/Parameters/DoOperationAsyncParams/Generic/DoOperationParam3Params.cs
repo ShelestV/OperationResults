@@ -19,8 +19,8 @@ public sealed class DoOperationAsyncParam<TResult, T1, T2, T3> : IOperationAsync
         this.value3 = value3;
     }
 
-    public async Task InvokeAsync(IOperationResult<TResult> result)
+    public async Task<TResult> InvokeAsync(IOperationResult<TResult> result)
     {
-        await this.operation.Invoke(result, this.value1, this.value2, this.value3);
+        return await this.operation.Invoke(result, this.value1, this.value2, this.value3);
     }
 }
