@@ -1,26 +1,25 @@
 ﻿using OperationResults.Generic;
-using OperationResults.Services.Delegates.Generic;
 using OperationResults.Services.Parameters.Interfaces;
 
 namespace OperationResults.Services.Parameters.Generic;
 
-public sealed class DoOperationParam<TResult, T1, T2, T3> : OperationParam<TResult>
+public sealed class DoOperationWithoutResultParam<TResult, T1, T2, T3> : OperationParam<TResult>
 {
-    private readonly DoOperation<TResult, T1, T2, T3> operation;
+    private readonly Func<T1, T2, T3, TResult> operation;
     private readonly T1 value1;
     private readonly T2 value2;
     private readonly T3 value3;
-
-    public DoOperationParam(DoOperation<TResult, T1, T2, T3> operation, T1 value1, T2 value2, T3 value3, bool finishOperation = true) : base(finishOperation) 
+    
+    public DoOperationWithoutResultParam(Func<T1, T2, T3, TResult> operation, T1 value1, T2 value2, T3 value3)
     {
         this.operation = operation;
         this.value1 = value1;
         this.value2 = value2;
         this.value3 = value3;
     }
-
+    
     public override TResult Invoke(IOperationResult<TResult> result)
     {
-        return this.operation.Invoke(result, this.value1, this.value2, this.value3);
+        return this.operation.Invoke(this.value1, this.value2, this.value3);
     }
 }

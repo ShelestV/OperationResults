@@ -110,6 +110,14 @@ public class DoOperationAsyncTests
         result.State.Should().Be(OperationResultState.NotFound);
     }
 
+    [Fact]
+    public async Task DoOperationAsync_AnonymousMethod_Test()
+    {
+	    var operationParam = AsyncParamsFactory.CreateWithResult<string>(async result => await Task.FromResult(StringResult));
+
+	    var result = await OperationService.DoOperationAsync(operationParam);
+    }
+    
     private static Task<string> DoOperationAsync(IOperationResult<string> result)
     {
         return Task.FromResult(StringResult);

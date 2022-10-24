@@ -4,18 +4,18 @@ using OperationResults.Services.Parameters.Interfaces;
 
 namespace OperationResults.Services.Parameters.Generic;
 
-public sealed class DoOperationParam<TResult, T1> : IOperationParam<TResult>
+public sealed class DoOperationParam<TResult, T1> : OperationParam<TResult>
 {
     private readonly DoOperation<TResult, T1> operation;
     private readonly T1 value1;
 
-    public DoOperationParam(DoOperation<TResult, T1> operation, T1 value1)
+    public DoOperationParam(DoOperation<TResult, T1> operation, T1 value1, bool finishOperation = true) : base(finishOperation)
     {
         this.operation = operation;
         this.value1 = value1;
     }
 
-    public TResult Invoke(IOperationResult<TResult> result)
+    public override TResult Invoke(IOperationResult<TResult> result)
     {
         return this.operation.Invoke(result, this.value1);
     }

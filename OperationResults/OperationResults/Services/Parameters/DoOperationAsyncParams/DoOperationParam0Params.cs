@@ -3,16 +3,16 @@ using OperationResults.Services.Parameters.Interfaces;
 
 namespace OperationResults.Services.Parameters;
 
-public class DoOperationAsyncParam : IOperationAsyncParam
+public class DoOperationAsyncParam : OperationAsyncParam
 {
     private readonly DoOperationAsync operation;
-
-    public DoOperationAsyncParam(DoOperationAsync operation)
+    
+    public DoOperationAsyncParam(DoOperationAsync operation, bool finishOperation = true) : base(finishOperation)
     {
         this.operation = operation;
     }
 
-    public async Task InvokeAsync(IOperationResult result)
+    public override async Task InvokeAsync(IOperationResult result)
     {
         await this.operation.Invoke(result);
     }
