@@ -13,7 +13,7 @@ public class DoOperationTests
     [Fact]
     public void DoOperation_Success_Delegate_WithoutLog_Test()
     {
-		var result = OperationService.DoOperation<string>(DoneOperation);
+		var result = OperationService.DoOperationWithResult<string>(DoneOperation);
 
         using var _ = new AssertionScope();
         result.State.Should().Be(OperationResultState.Ok);
@@ -25,7 +25,7 @@ public class DoOperationTests
 	{
 		var operationParam = new Services.Parameters.Generic.DoOperationParam<string>(DoneOperation);
 
-		var result = OperationService.DoOperation(operationParam);
+		var result = OperationService.DoOperationWithResult(operationParam);
 
 		using var _ = new AssertionScope();
 		result.State.Should().Be(OperationResultState.Ok);
@@ -37,7 +37,7 @@ public class DoOperationTests
 	{
 		var operationParam = new Services.Parameters.Generic.DoOperationParam<string, Exception>(ThrowException, this.exception);
 
-		var result = OperationService.DoOperation(operationParam);
+		var result = OperationService.DoOperationWithResult(operationParam);
 
 		using var _ = new AssertionScope();
 		result.State.Should().Be(OperationResultState.BadFlow);
@@ -49,7 +49,7 @@ public class DoOperationTests
 	{
 		var logParam = new LogOperationWithSuffixParam<string>(Log, LogMessage);
 
-		var result = OperationService.DoOperation<string>(DoneOperation, logParam);
+		var result = OperationService.DoOperationWithResult<string>(DoneOperation, logParam);
 
 		using var _ = new AssertionScope();
 		result.State.Should().Be(OperationResultState.Ok);
@@ -62,7 +62,7 @@ public class DoOperationTests
 		var operationParam = new Services.Parameters.Generic.DoOperationParam<string>(DoneOperation);
 		var logParam = new LogOperationWithSuffixParam<string>(Log, LogMessage);
 
-		var result = OperationService.DoOperation(operationParam, logParam);
+		var result = OperationService.DoOperationWithResult(operationParam, logParam);
 
 		using var _ = new AssertionScope();
 		result.State.Should().Be(OperationResultState.Ok);
@@ -75,7 +75,7 @@ public class DoOperationTests
 		var operationParam = new Services.Parameters.Generic.DoOperationParam<string>(DoneOperation);
 		var logParam = new LogOperationWithSuffixParam<string>(Log, LogMessage);
 
-		var result = OperationService.DoOperation(operationParam, logParam);
+		var result = OperationService.DoOperationWithResult(operationParam, logParam);
 
 		using var _ = new AssertionScope();
 		result.State.Should().Be(OperationResultState.Ok);
@@ -85,11 +85,9 @@ public class DoOperationTests
 	[Fact]
     public void DoOperation_Fail_Test()
     {
-        var logMessage = LogMessage;
-
-        var result = OperationService.DoOperation(
+	    var result = OperationService.DoOperationWithResult(
             new Services.Parameters.Generic.DoOperationParam<string, Exception>(FailOperation, this.exception),
-            new LogOperationWithSuffixParam<string>(Log, logMessage));
+            new LogOperationWithSuffixParam<string>(Log, LogMessage));
 
         using var _ = new AssertionScope();
         result.State.Should().Be(OperationResultState.BadFlow);
@@ -101,7 +99,7 @@ public class DoOperationTests
     {
         var logMessage = LogMessage;
 
-        var result = OperationService.DoOperation(
+        var result = OperationService.DoOperationWithResult(
             new Services.Parameters.Generic.DoOperationParam<string>(NotFound),
             new LogOperationWithSuffixParam<string>(Log, logMessage));
 

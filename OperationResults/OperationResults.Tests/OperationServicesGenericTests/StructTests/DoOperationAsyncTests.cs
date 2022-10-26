@@ -13,7 +13,7 @@ public class DoOperationAsyncTests
 	[Fact]
 	public async Task DoOperationAsync_Success_Delegate_WithoutLog_Test()
 	{
-		var result = await OperationService.DoOperationAsync<Guid>(DoOperationAsync);
+		var result = await OperationService.DoOperationWithResultAsync<Guid>(DoOperationAsync);
 
 		using var _ = new AssertionScope();
 		result.State.Should().Be(OperationResultState.Ok);
@@ -25,7 +25,7 @@ public class DoOperationAsyncTests
     {
         var operationParam = new Services.Parameters.Generic.DoOperationAsyncParam<Guid>(DoOperationAsync);
 
-		var result = await OperationService.DoOperationAsync(operationParam);
+		var result = await OperationService.DoOperationWithResultAsync(operationParam);
 
         using var _ = new AssertionScope();
         result.State.Should().Be(OperationResultState.Ok);
@@ -37,7 +37,7 @@ public class DoOperationAsyncTests
 	{
 		var operationParam = new Services.Parameters.Generic.DoOperationAsyncParam<Guid, Exception>(ThrowExceptionAsync, this.exception);
 
-		var result = await OperationService.DoOperationAsync(operationParam);
+		var result = await OperationService.DoOperationWithResultAsync(operationParam);
 
 		using var _ = new AssertionScope();
 		result.State.Should().Be(OperationResultState.BadFlow);
@@ -49,7 +49,7 @@ public class DoOperationAsyncTests
 	{
         var logParam = new LogOperationWithSuffixParam<string>(Log, LogMessage);
 
-		var result = await OperationService.DoOperationAsync<Guid>(DoOperationAsync, logParam);
+		var result = await OperationService.DoOperationWithResultAsync<Guid>(DoOperationAsync, logParam);
 
 		using var _ = new AssertionScope();
 		result.State.Should().Be(OperationResultState.Ok);
@@ -61,7 +61,7 @@ public class DoOperationAsyncTests
 	{
 		var logParam = new LogOperationWithSuffixParam<string>(Log, LogMessage);
 
-		var result = await OperationService.DoOperationAsync<Guid>(DoOperationAsync, logParam);
+		var result = await OperationService.DoOperationWithResultAsync<Guid>(DoOperationAsync, logParam);
 
 		using var _ = new AssertionScope();
 		result.State.Should().Be(OperationResultState.Ok);
@@ -73,7 +73,7 @@ public class DoOperationAsyncTests
     {
         var logMessage = LogMessage;
 
-        var result = await OperationService.DoOperationAsync(
+        var result = await OperationService.DoOperationWithResultAsync(
             new Services.Parameters.Generic.DoOperationAsyncParam<Guid, Exception>(FailOperationAsync, this.exception),
             new LogOperationWithSuffixParam<string>(Log, logMessage));
 
@@ -87,7 +87,7 @@ public class DoOperationAsyncTests
     {
         var logMessage = LogMessage;
 
-        var result = await OperationService.DoOperationAsync(
+        var result = await OperationService.DoOperationWithResultAsync(
             new Services.Parameters.Generic.DoOperationAsyncParam<Guid, Exception>(ThrowExceptionAsync, this.exception),
             new LogOperationWithSuffixParam<string>(Log, logMessage));
 
@@ -101,7 +101,7 @@ public class DoOperationAsyncTests
     {
         var logMessage = LogMessage;
 
-        var result = await OperationService.DoOperationAsync(
+        var result = await OperationService.DoOperationWithResultAsync(
             new Services.Parameters.Generic.DoOperationAsyncParam<Guid>(NotFoundAsync),
             new LogOperationWithSuffixParam<string>(Log, logMessage));
 

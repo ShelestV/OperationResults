@@ -13,6 +13,7 @@
     <RepositoryUrl>https://github.com/ShelestV/OperationResults</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageVersion>1.1.2</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>

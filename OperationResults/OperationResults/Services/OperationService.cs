@@ -1,5 +1,4 @@
-﻿using OperationResults.Services.Delegates;
-using OperationResults.Services.Parameters;
+﻿using OperationResults.Services.Parameters;
 using OperationResults.Services.Parameters.Interfaces;
 
 namespace OperationResults.Services;
@@ -14,7 +13,7 @@ public static partial class OperationService
 	}
 	
 	public static async Task<IOperationResult> DoOperationAsync(
-		DoOperationAsync operation,
+		Func<IOperationResult, Task> operation,
 		bool finishOperation = true)
 	{
 		var operationParam = AsyncParamsFactory.Create(operation, finishOperation);
@@ -47,7 +46,7 @@ public static partial class OperationService
 	}
 	
     public static async Task<IOperationResult> DoOperationAsync(
-        DoOperationAsync operation,
+        Func<IOperationResult, Task> operation,
         ILogOperationWithSuffixParam log,
         bool finishOperation = true)
     {
@@ -81,7 +80,7 @@ public static partial class OperationService
     }
     
 	public static IOperationResult DoOperation(
-	    DoOperation operation,
+	    Action<IOperationResult> operation,
 	    bool finishOperation = true)
 	{
 		var operationParam = ParamsFactory.Create(operation, finishOperation);
@@ -114,7 +113,7 @@ public static partial class OperationService
 	}
 	
 	public static IOperationResult DoOperation(
-		DoOperation operation,
+		Action<IOperationResult> operation,
 		ILogOperationWithSuffixParam log,
 		bool finishOperation = true)
 	{

@@ -13,7 +13,7 @@ public class DoOperationAsyncTests
     [Fact]
     public async Task DoOperationAsync_Success_Delegate_WithoutLog_Test()
     {
-		var result = await OperationService.DoOperationAsync<string>(DoOperationAsync);
+		var result = await OperationService.DoOperationWithResultAsync<string>(DoOperationAsync);
 
         using var _ = new AssertionScope();
         result.State.Should().Be(OperationResultState.Ok);
@@ -25,7 +25,7 @@ public class DoOperationAsyncTests
     {
 		var operationParam = new Services.Parameters.Generic.DoOperationAsyncParam<string>(DoOperationAsync);
 
-		var result = await OperationService.DoOperationAsync(operationParam);
+		var result = await OperationService.DoOperationWithResultAsync(operationParam);
 
 		using var _ = new AssertionScope();
 		result.State.Should().Be(OperationResultState.Ok);
@@ -37,7 +37,7 @@ public class DoOperationAsyncTests
     {
 		var operationParam = new Services.Parameters.Generic.DoOperationAsyncParam<string, Exception>(ThrowExceptionAsync, this.exception);
 
-		var result = await OperationService.DoOperationAsync(operationParam);
+		var result = await OperationService.DoOperationWithResultAsync(operationParam);
 
 		using var _ = new AssertionScope();
 		result.State.Should().Be(OperationResultState.BadFlow);
@@ -49,7 +49,7 @@ public class DoOperationAsyncTests
 	{
 		var logParam = new LogOperationWithSuffixParam<string>(Log, LogMessage);
 
-		var result = await OperationService.DoOperationAsync<string>(DoOperationAsync, logParam);
+		var result = await OperationService.DoOperationWithResultAsync<string>(DoOperationAsync, logParam);
 
 		using var _ = new AssertionScope();
 		result.State.Should().Be(OperationResultState.Ok);
@@ -62,7 +62,7 @@ public class DoOperationAsyncTests
 		var operationParam = new Services.Parameters.Generic.DoOperationAsyncParam<string>(DoOperationAsync);
 		var logParam = new LogOperationWithSuffixParam<string>(Log, LogMessage);
 
-		var result = await OperationService.DoOperationAsync(operationParam, logParam);
+		var result = await OperationService.DoOperationWithResultAsync(operationParam, logParam);
 
 		using var _ = new AssertionScope();
 		result.State.Should().Be(OperationResultState.Ok);
@@ -74,7 +74,7 @@ public class DoOperationAsyncTests
     {
         var logMessage = LogMessage;
 
-        var result = await OperationService.DoOperationAsync(
+        var result = await OperationService.DoOperationWithResultAsync(
             new Services.Parameters.Generic.DoOperationAsyncParam<string, Exception>(FailOperationAsync, this.exception),
             new LogOperationWithSuffixParam<string>(Log, logMessage));
 
@@ -86,11 +86,9 @@ public class DoOperationAsyncTests
     [Fact]
     public async Task DoOperationAsync_FailWithExceptionThrowing_Test()
     {
-        var logMessage = LogMessage;
-
-        var result = await OperationService.DoOperationAsync(
-            new Services.Parameters.Generic.DoOperationAsyncParam<string, Exception>(ThrowExceptionAsync, this.exception),
-            new LogOperationWithSuffixParam<string>(Log, logMessage));
+	    var result = await OperationService.DoOperationWithResultAsync(
+            AsyncParamsFactory.CreateWithResult<string, Exception>(ThrowExceptionAsync, this.exception),
+            new LogOperationWithSuffixParam<string>(Log, LogMessage));
 
         using var _ = new AssertionScope();
         result.State.Should().Be(OperationResultState.BadFlow);
@@ -100,11 +98,9 @@ public class DoOperationAsyncTests
     [Fact]
     public async Task DoOperationAsync_NotFound_Test()
     {
-        var logMessage = LogMessage;
-
-        var result = await OperationService.DoOperationAsync(
+	    var result = await OperationService.DoOperationWithResultAsync(
             new Services.Parameters.Generic.DoOperationAsyncParam<string>(NotFoundAsync),
-            new LogOperationWithSuffixParam<string>(Log, logMessage));
+            new LogOperationWithSuffixParam<string>(Log, LogMessage));
 
         using var _ = new AssertionScope();
         result.State.Should().Be(OperationResultState.NotFound);
@@ -113,9 +109,12 @@ public class DoOperationAsyncTests
     [Fact]
     public async Task DoOperationAsync_AnonymousMethod_Test()
     {
-	    var operationParam = AsyncParamsFactory.CreateWithResult<string>(async result => await Task.FromResult(StringResult));
+	    var operationParam = AsyncParamsFactory.CreateWithResult(async () => await Task.FromResult(StringResult));
 
-	    var result = await OperationService.DoOperationAsync(operationParam);
+	    var result = await OperationService.DoOperationWithResultAsync(operationParam);
+
+	    using var _ = new AssertionScope();
+	    result.State.Should().Be(OperationResultState.Ok);
     }
     
     private static Task<string> DoOperationAsync(IOperationResult<string> result)

@@ -1,5 +1,4 @@
 ﻿using OperationResults.Generic;
-using OperationResults.Services.Delegates.Generic;
 using OperationResults.Services.Parameters;
 using OperationResults.Services.Parameters.Interfaces;
 
@@ -7,22 +6,22 @@ namespace OperationResults.Services;
 
 public static partial class OperationService
 {
-	public static async Task<IOperationResult<TResult>> DoOperationAsync<TResult>(
+	public static async Task<IOperationResult<TResult>> DoOperationWithResultAsync<TResult>(
 		Func<Task<TResult>> operation)
 	{
 		var operationParam = AsyncParamsFactory.CreateWithResult(operation);
-		return await DoOperationAsync(operationParam);
+		return await DoOperationWithResultAsync(operationParam);
 	}
 	
-	public static async Task<IOperationResult<TResult>> DoOperationAsync<TResult>(
-		DoOperationAsync<TResult> operation,
+	public static async Task<IOperationResult<TResult>> DoOperationWithResultAsync<TResult>(
+		Func<IOperationResult<TResult>, Task<TResult>> operation,
 		bool finishOperation = true)
 	{
 		var operationParam = AsyncParamsFactory.CreateWithResult(operation, finishOperation);
-		return await DoOperationAsync(operationParam);
+		return await DoOperationWithResultAsync(operationParam);
 	}
 
-	public static async Task<IOperationResult<TResult>> DoOperationAsync<TResult>(
+	public static async Task<IOperationResult<TResult>> DoOperationWithResultAsync<TResult>(
          OperationAsyncParam<TResult> operation)
     {
         var result = OperationResultFactory.Create<TResult>();
@@ -40,24 +39,24 @@ public static partial class OperationService
         return result;
     }
 
-	public static async Task<IOperationResult<TResult>> DoOperationAsync<TResult>(
+	public static async Task<IOperationResult<TResult>> DoOperationWithResultAsync<TResult>(
 		Func<Task<TResult>> operation,
 		ILogOperationWithSuffixParam log)
 	{
 		var operationParam = AsyncParamsFactory.CreateWithResult(operation);
-		return await DoOperationAsync(operationParam, log);
+		return await DoOperationWithResultAsync(operationParam, log);
 	}
 	
-	public static async Task<IOperationResult<TResult>> DoOperationAsync<TResult>(
-		DoOperationAsync<TResult> operation,
+	public static async Task<IOperationResult<TResult>> DoOperationWithResultAsync<TResult>(
+		Func<IOperationResult<TResult>, Task<TResult>> operation,
 		ILogOperationWithSuffixParam log,
 		bool finishOperation = true)
 	{
 		var operationParam = AsyncParamsFactory.CreateWithResult(operation, finishOperation);
-		return await DoOperationAsync(operationParam, log);
+		return await DoOperationWithResultAsync(operationParam, log);
 	}
 
-	public static async Task<IOperationResult<TResult>> DoOperationAsync<TResult>(
+	public static async Task<IOperationResult<TResult>> DoOperationWithResultAsync<TResult>(
 		 OperationAsyncParam<TResult> operation,
 		 ILogOperationWithSuffixParam log)
 	{
@@ -75,22 +74,22 @@ public static partial class OperationService
 		return result;
 	}
 
-	public static IOperationResult<TResult> DoOperation<TResult>(
+	public static IOperationResult<TResult> DoOperationWithResult<TResult>(
 		Func<TResult> operation)
 	{
 		var operationParam = ParamsFactory.CreateWithResult(operation);
-		return DoOperation(operationParam);
+		return DoOperationWithResult(operationParam);
 	}
 	
-	public static IOperationResult<TResult> DoOperation<TResult>(
-		DoOperation<TResult> operation,
+	public static IOperationResult<TResult> DoOperationWithResult<TResult>(
+		Func<IOperationResult<TResult>, TResult> operation,
 		bool finishOperation = true)
 	{
 		var operationParam = ParamsFactory.CreateWithResult(operation, finishOperation);
-		return DoOperation(operationParam);
+		return DoOperationWithResult(operationParam);
 	}
 
-	public static IOperationResult<TResult> DoOperation<TResult>(
+	public static IOperationResult<TResult> DoOperationWithResult<TResult>(
 		OperationParam<TResult> operation)
 	{
 		var result = OperationResultFactory.Create<TResult>();
@@ -107,24 +106,24 @@ public static partial class OperationService
 		return result;
 	}
 
-	public static IOperationResult<TResult> DoOperation<TResult>(
+	public static IOperationResult<TResult> DoOperationWithResult<TResult>(
 		Func<TResult> operation,
 		ILogOperationWithSuffixParam log)
 	{
 		var operationParam = ParamsFactory.CreateWithResult(operation);
-		return DoOperation(operationParam, log);
+		return DoOperationWithResult(operationParam, log);
 	}
 	
-	public static IOperationResult<TResult> DoOperation<TResult>(
-		DoOperation<TResult> operation,
+	public static IOperationResult<TResult> DoOperationWithResult<TResult>(
+		Func<IOperationResult<TResult>, TResult> operation,
 		ILogOperationWithSuffixParam log,
 		bool finishOperation = true)
 	{
 		var operationParam = ParamsFactory.CreateWithResult(operation, finishOperation);
-		return DoOperation(operationParam, log);
+		return DoOperationWithResult(operationParam, log);
 	}
 
-	public static IOperationResult<TResult> DoOperation<TResult>(
+	public static IOperationResult<TResult> DoOperationWithResult<TResult>(
         OperationParam<TResult> operation, 
         ILogOperationWithSuffixParam log)
     {
