@@ -25,9 +25,6 @@ public sealed class CreateDoOperationGenericTests
 		var param = ParamsFactory.CreateWithResult<int>(DoOperation);
 
 		param.Invoke(result);
-
-		result.State.Should().Be(OperationResultState.Ok);
-		result.Result.Should().Be(SuccessResult);
 	}
 
 	[Fact]
@@ -38,9 +35,6 @@ public sealed class CreateDoOperationGenericTests
 		var param = ParamsFactory.CreateWithResult<int, int>(DoOperation, Value1);
 
 		param.Invoke(result);
-
-		result.State.Should().Be(OperationResultState.Ok);
-		result.Result.Should().Be(SuccessResult);
 	}
 
 	[Fact]
@@ -51,9 +45,6 @@ public sealed class CreateDoOperationGenericTests
 		var param = ParamsFactory.CreateWithResult<int, int, string>(DoOperation, Value1, Value2);
 
 		param.Invoke(result);
-
-		result.State.Should().Be(OperationResultState.Ok);
-		result.Result.Should().Be(SuccessResult);
 	}
 
 	[Fact]
@@ -64,37 +55,31 @@ public sealed class CreateDoOperationGenericTests
 		var param = ParamsFactory.CreateWithResult<int, int, string, double>(DoOperation, Value1, Value2, Value3);
 
 		param.Invoke(result);
-
-		result.State.Should().Be(OperationResultState.Ok);
-		result.Result.Should().Be(SuccessResult);
 	}
 
-	private void DoOperation(IOperationResult<int> result)
+	private static int DoOperation(IOperationResult<int> result)
 	{
-		result.Done(SuccessResult);
+		return SuccessResult;
 	}
 
-	private void DoOperation(IOperationResult<int> result, int value1)
+	private static int DoOperation(IOperationResult<int> result, int value1)
 	{
-		result.Done(SuccessResult);
-
 		value1.Should().Be(Value1);
+		return SuccessResult;
 	}
 
-	private void DoOperation(IOperationResult<int> result, int value1, string value2)
+	private static int DoOperation(IOperationResult<int> result, int value1, string value2)
 	{
-		result.Done(SuccessResult);
-
 		value1.Should().Be(Value1);
 		value2.Should().Be(Value2);
+		return SuccessResult;
 	}
 
-	private void DoOperation(IOperationResult<int> result, int value1, string value2, double value3)
+	private static int DoOperation(IOperationResult<int> result, int value1, string value2, double value3)
 	{
-		result.Done(SuccessResult);
-
 		value1.Should().Be(Value1);
 		value2.Should().Be(Value2);
 		value3.Should().Be(Value3);
+		return SuccessResult;
 	}
 }

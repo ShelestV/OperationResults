@@ -8,16 +8,16 @@ public class DoOperationTests
     private const string LogMessage = "Test message";
     private readonly Exception exception = new("Test exception");
 
-    private static readonly Guid GuidResult = Guid.Parse("36cf91f0-afb2-4748-b313-dd31cb368f5e");
+    private static readonly Guid guidResult = Guid.Parse("36cf91f0-afb2-4748-b313-dd31cb368f5e");
 
 	[Fact]
 	public void DoOperation_Success_Delegate_WithoutLog_Test()
 	{
-		var result = OperationService.DoOperation<Guid>(DoneOperation);
+		var result = OperationService.DoOperationWithResult<Guid>(DoneOperation);
 
 		using var _ = new AssertionScope();
 		result.State.Should().Be(OperationResultState.Ok);
-		result.Result.Should().Be(GuidResult);
+		result.Result.Should().Be(guidResult);
 	}
 
 	[Fact]
@@ -25,11 +25,11 @@ public class DoOperationTests
 	{
 		var operationParam = new Services.Parameters.Generic.DoOperationParam<Guid>(DoneOperation);
 
-		var result = OperationService.DoOperation(operationParam);
+		var result = OperationService.DoOperationWithResult(operationParam);
 
 		using var _ = new AssertionScope();
 		result.State.Should().Be(OperationResultState.Ok);
-		result.Result.Should().Be(GuidResult);
+		result.Result.Should().Be(guidResult);
 	}
 
 	[Fact]
@@ -37,7 +37,7 @@ public class DoOperationTests
 	{
 		var operationParam = new Services.Parameters.Generic.DoOperationParam<Guid, Exception>(ThrowException, this.exception);
 
-		var result = OperationService.DoOperation(operationParam);
+		var result = OperationService.DoOperationWithResult(operationParam);
 
 		using var _ = new AssertionScope();
 		result.State.Should().Be(OperationResultState.BadFlow);
@@ -49,11 +49,11 @@ public class DoOperationTests
 	{
 		var logParam = new LogOperationWithSuffixParam<string>(Log, LogMessage);
 
-		var result = OperationService.DoOperation<Guid>(DoneOperation, logParam);
+		var result = OperationService.DoOperationWithResult<Guid>(DoneOperation, logParam);
 
 		using var _ = new AssertionScope();
 		result.State.Should().Be(OperationResultState.Ok);
-		result.Result.Should().Be(GuidResult);
+		result.Result.Should().Be(guidResult);
 	}
 
 	[Fact]
@@ -62,11 +62,11 @@ public class DoOperationTests
 		var operationParam = new Services.Parameters.Generic.DoOperationParam<Guid>(DoneOperation);
 		var logParam = new LogOperationWithSuffixParam<string>(Log, LogMessage);
 
-		var result = OperationService.DoOperation(operationParam, logParam);
+		var result = OperationService.DoOperationWithResult(operationParam, logParam);
 
 		using var _ = new AssertionScope();
 		result.State.Should().Be(OperationResultState.Ok);
-		result.Result.Should().Be(GuidResult);
+		result.Result.Should().Be(guidResult);
 	}
 
 	[Fact]
@@ -74,7 +74,7 @@ public class DoOperationTests
     {
         var logMessage = LogMessage;
 
-        var result = OperationService.DoOperation(
+        var result = OperationService.DoOperationWithResult(
             new Services.Parameters.Generic.DoOperationParam<Guid, Exception>(FailOperation, this.exception),
             new LogOperationWithSuffixParam<string>(Log, logMessage));
 
@@ -88,7 +88,7 @@ public class DoOperationTests
     {
         var logMessage = LogMessage;
 
-        var result = OperationService.DoOperation(
+        var result = OperationService.DoOperationWithResult(
             new Services.Parameters.Generic.DoOperationParam<Guid, Exception>(ThrowException, this.exception),
             new LogOperationWithSuffixParam<string>(Log, logMessage));
 
@@ -102,7 +102,7 @@ public class DoOperationTests
     {
         var logMessage = LogMessage;
 
-        var result = OperationService.DoOperation(
+        var result = OperationService.DoOperationWithResult(
             new Services.Parameters.Generic.DoOperationParam<Guid>(NotFound),
             new LogOperationWithSuffixParam<string>(Log, logMessage));
 
@@ -110,24 +110,26 @@ public class DoOperationTests
         result.State.Should().Be(OperationResultState.NotFound);
     }
 
-    private static void DoneOperation(IOperationResult<Guid> result)
+    private static Guid DoneOperation(IOperationResult<Guid> result)
     {
-        result.Done(GuidResult);
+	    return guidResult;
     }
 
-    private static void FailOperation(IOperationResult<Guid> result, Exception ex)
+    private static Guid FailOperation(IOperationResult<Guid> result, Exception ex)
     {
         result.Fail(ex);
+        return Guid.Empty;
     }
 
-    private static void ThrowException(IOperationResult<Guid> result, Exception ex)
+    private static Guid ThrowException(IOperationResult<Guid> result, Exception ex)
     {
         throw ex;
     }
 
-    private static void NotFound(IOperationResult<Guid> result)
+    private static Guid NotFound(IOperationResult<Guid> result)
     {
         result.NotFound();
+        return Guid.Empty;
     }
 
     private void Log(string errorSuffix, string errorMessage)

@@ -12,6 +12,7 @@
     <Company>ShelestV</Company>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Authors>ShelestV</Authors>
+    <PackageVersion>1.4.1</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>

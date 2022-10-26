@@ -18,7 +18,7 @@ public static class OperationResultExtensions
         {
             OperationResultState.Ok => new OkResult(),
             OperationResultState.BadFlow => new BadRequestObjectResult(result.Exception),
-            OperationResultState.NotFound => new NotFoundResult(),
+            OperationResultState.NotFound => new NoContentResult(),
             OperationResultState.Processing => new BadRequestObjectResult(new OperationStillProcessingException()),
             _ => new BadRequestResult()
         };
@@ -36,7 +36,7 @@ public static class OperationResultExtensions
         {
             OperationResultState.Ok => new OkObjectResult(result.Result),
             OperationResultState.BadFlow => new BadRequestObjectResult(result.Exception),
-            OperationResultState.NotFound => new NotFoundResult(),
+            OperationResultState.NotFound => new NoContentResult(),
             OperationResultState.Processing => new BadRequestObjectResult(new OperationStillProcessingException()),
             _ => new BadRequestResult()
         };

@@ -29,14 +29,13 @@ public class NotFoundOperationTests
     public void FailOperationWithLog()
     {
         this.ResetResult();
-        var logMessage = LogMessage;
 
         OperationService.NotFound(this.result,
-            new LogOperationParam<string>(Log, logMessage));
+                                  new LogOperationParam<string>(Log, LogMessage));
 
         using var _ = new AssertionScope();
         this.result.State.Should().Be(OperationResultState.NotFound);
-        logMessage.Should().Be(LogMessage);
+        LogMessage.Should().Be(LogMessage);
     }
 
     private static void Log(string logMessage)

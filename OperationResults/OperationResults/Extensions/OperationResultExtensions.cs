@@ -5,7 +5,9 @@ namespace OperationResults;
 
 public static class OperationResultExtensions
 {
-	public static IOperationResult<TResult> ToGeneric<TResult>(this IOperationResult operationResult, TResult? result = default)
+	public static IOperationResult<TResult> ToGeneric<TResult>(
+		this IOperationResult operationResult, 
+		TResult? result = default)
 	{
 		var genericOperationResult = OperationResultFactory.Create<TResult>();
 		switch (operationResult.State)
@@ -25,7 +27,8 @@ public static class OperationResultExtensions
 		return genericOperationResult;
 	}
 
-	public static IOperationResult ToGeneral<TResult>(this IOperationResult<TResult> genericOperationResult)
+	public static IOperationResult ToGeneral<TResult>(
+		this IOperationResult<TResult> genericOperationResult)
 	{
 		var operationResult = OperationResultFactory.Create();
 		switch (genericOperationResult.State)
@@ -45,7 +48,9 @@ public static class OperationResultExtensions
 		return operationResult;
 	}
 
-	public static IOperationResult<TOutResult> ChangeResultType<TInResult, TOutResult>(this IOperationResult<TInResult> inOperationResult, TOutResult? result = default)
+	public static IOperationResult<TOutResult> ChangeResultType<TInResult, TOutResult>(
+		this IOperationResult<TInResult> inOperationResult, 
+		TOutResult? result = default)
 	{
 		var outOperationResult = OperationResultFactory.Create<TOutResult>();
 		switch (inOperationResult.State)
@@ -65,7 +70,9 @@ public static class OperationResultExtensions
 		return outOperationResult;
 	}
 
-	private static void SetResult<TResult>(IOperationResult<TResult> operationResult, TResult? result)
+	private static void SetResult<TResult>(
+		IOperationResult<TResult> operationResult, 
+		TResult? result)
 	{
 		if (EqualityComparer<TResult>.Default.Equals(result, default(TResult)))
 			operationResult.Fail(new ArgumentException("Operation result is invalid"));
@@ -73,12 +80,14 @@ public static class OperationResultExtensions
 			operationResult.Done(result!);
 	}
 
-	public static bool IsCorrect<TResult>(this IOperationResult<TResult> result)
+	public static bool IsCorrect<TResult>(
+		this IOperationResult<TResult> result)
 	{
 		return result.State == OperationResultState.Ok;
 	}
 
-	public static bool IsCorrect(this IOperationResult result)
+	public static bool IsCorrect(
+		this IOperationResult result)
 	{
 		return result.State == OperationResultState.Ok;
 	}

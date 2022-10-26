@@ -4,7 +4,7 @@ namespace OperationResults.Abstractions;
 
 public abstract class OperationResultBase
 {
-	protected Exception? exception;
+	private Exception? exception;
 
 	public OperationResultState State { get; protected set; }
 	public Exception Exception
@@ -30,14 +30,23 @@ public abstract class OperationResultBase
 		this.exception = null;
 	}
 
-	public void Fail(Exception exception)
+	public void Fail(Exception ex)
 	{
-		this.exception = exception;
+		if (!this.CouldChangeState()) return;
+		
+		this.exception = ex;
 		this.State = OperationResultState.BadFlow;
 	}
 
 	public void NotFound()
 	{
+		if (!this.CouldChangeState()) return;
+		
 		this.State = OperationResultState.NotFound;
+	}
+
+	protected bool CouldChangeState()
+	{
+		return this.State == OperationResultState.Processing;
 	}
 }
