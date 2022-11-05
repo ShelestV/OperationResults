@@ -1,4 +1,4 @@
-﻿using OperationResults.Services.Parameters.Interfaces;
+﻿using OperationResults.Services.Parameters.Abstractions;
 
 namespace OperationResults.Services.Parameters;
 
