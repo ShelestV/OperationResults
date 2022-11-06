@@ -16,12 +16,19 @@ public static partial class OperationService
 
 	public static async Task<IOperationResult<TResult>> DoOperationWithResultAsync<TResult>(
 		ISimpleOperationAsyncParam<TResult> operation,
-		ILogOperationWithSuffixParam? log = null)
+		ILogOperationWithSuffixParam? log = null,
+		ILogOperationParam? notFoundLog = null)
 	{
 		var result = OperationResultFactory.Create<TResult>();
 		try
 		{
 			var operationResult = await operation.InvokeAsync();
+			if (operationResult is null)
+			{
+				NotFound(result, notFoundLog);
+				return result;
+			}
+			
 			result.Done(operationResult);
 		}
 		catch (Exception ex)
@@ -32,7 +39,7 @@ public static partial class OperationService
 	}
 	
 	public static async Task<IOperationResult<TResult>> DoOperationWithResultAsync<TResult>(
-		Func<IOperationResult<TResult>, Task<TResult>> operation,
+		Func<IOperationResult<TResult>, Task> operation,
 		ILogOperationWithSuffixParam? log = null)
 	{
 		var operationParam = AsyncParamsFactory.CreateWithResult(operation);
@@ -65,12 +72,20 @@ public static partial class OperationService
 
 	public static IOperationResult<TResult> DoOperationWithResult<TResult>(
 		ISimpleOperationParam<TResult> operation,
-		ILogOperationWithSuffixParam? log = null)
+		ILogOperationWithSuffixParam? log = null,
+		ILogOperationParam? notFoundLog = null)
 	{
 		var result = OperationResultFactory.Create<TResult>();
 		try
 		{
-			var operationResult = operation.Invoke(); 
+			var operationResult = operation.Invoke();
+
+			if (operationResult is null)
+			{
+				NotFound(result, notFoundLog);
+				return result;
+			}
+			
 			result.Done(operationResult);
 		}
 		catch (Exception ex)

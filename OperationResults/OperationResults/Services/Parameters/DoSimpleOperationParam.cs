@@ -5,7 +5,6 @@ namespace OperationResults.Services.Parameters;
 public sealed class DoSimpleOperationParam : ISimpleOperationParam
 {
     private readonly Action operation;
-
     
     internal DoSimpleOperationParam(Action operation)
     {
@@ -22,7 +21,6 @@ public sealed class DoSimpleOperationParam<T1> : ISimpleOperationParam
 {
     private readonly Action<T1> operation;
     private readonly T1 value1;
-
     
     internal DoSimpleOperationParam(Action<T1> operation, T1 value1)
     {
@@ -41,7 +39,6 @@ public sealed class DoSimpleOperationParam<T1, T2> : ISimpleOperationParam
     private readonly Action<T1, T2> operation;
     private readonly T1 value1;
     private readonly T2 value2;
-
     
     internal DoSimpleOperationParam(Action<T1, T2> operation, T1 value1, T2 value2)
     {
@@ -62,7 +59,6 @@ public sealed class DoSimpleOperationParam<T1, T2, T3> : ISimpleOperationParam
     private readonly T1 value1;
     private readonly T2 value2;
     private readonly T3 value3;
-
     
     internal DoSimpleOperationParam(Action<T1, T2, T3> operation, T1 value1, T2 value2, T3 value3)
     {

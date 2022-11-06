@@ -4,7 +4,7 @@ public class OperationResultsGenericTests
 {
     private IOperationResult<Guid> result = OperationResultFactory.Create<Guid>();
 
-    private void ReserResult()
+    private void ResetResult()
     {
         result = OperationResultFactory.Create<Guid>();
     }
@@ -12,7 +12,7 @@ public class OperationResultsGenericTests
     [Fact]
     public void DefaultBehaviour_Success_Test()
     {
-        this.ReserResult();
+        this.ResetResult();
 
         using var _ = new AssertionScope();
         this.result.State.Should().Be(OperationResultState.Processing);
@@ -23,7 +23,7 @@ public class OperationResultsGenericTests
     [Fact]
     public void DoneOperationResult_Success_Test()
     {
-        this.ReserResult();
+        this.ResetResult();
 
         var guid = Guid.Empty;
 
@@ -39,7 +39,7 @@ public class OperationResultsGenericTests
     [Fact]
     public void FailOperationResult_Success_Test()
     {
-        this.ReserResult();
+        this.ResetResult();
 
         var ex = new Exception("Test");
 
@@ -55,7 +55,7 @@ public class OperationResultsGenericTests
     [Fact]
     public void NotFoundOperationResult_Success_Test()
     {
-        this.ReserResult();
+        this.ResetResult();
 
         this.result.NotFound();
 
@@ -63,5 +63,26 @@ public class OperationResultsGenericTests
         this.result.State.Should().Be(OperationResultState.NotFound);
         this.result.Invoking(x => x.Exception).Should().Throw<IncorrectOperationResultStateException>();
         this.result.Invoking(x => x.Result).Should().Throw<IncorrectOperationResultStateException>();
+    }
+    
+    [Fact]
+    public void DoneOperationResult_TryChangeStateFromFailToDone_WhenItIsImpossible()
+    {
+        this.ResetResult();
+        
+        this.result.Fail(new Exception("Test"));
+
+        using (var _ = new AssertionScope())
+        {
+            this.result.State.Should().Be(OperationResultState.BadFlow);
+        }
+        
+        this.result.Done(Guid.NewGuid());
+
+        using (var _ = new AssertionScope())
+        {
+            this.result.State.Should().NotBe(OperationResultState.Ok);
+            this.result.State.Should().Be(OperationResultState.BadFlow);
+        }
     }
 }

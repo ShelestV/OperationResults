@@ -19,5 +19,5 @@ public interface ISimpleOperationParam
 
 public interface ISimpleOperationParam<out TResult>
 {
-    TResult Invoke();
+    TResult? Invoke();
 }

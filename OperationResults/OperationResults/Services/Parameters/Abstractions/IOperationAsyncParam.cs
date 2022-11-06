@@ -19,5 +19,5 @@ public interface ISimpleOperationAsyncParam
 
 public interface ISimpleOperationAsyncParam<TResult>
 {
-    Task<TResult> InvokeAsync();
+    Task<TResult?> InvokeAsync();
 }
