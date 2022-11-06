@@ -1,70 +1,66 @@
-﻿using OperationResults.Services.Parameters.Interfaces;
+﻿using OperationResults.Services.Parameters.Abstractions;
 
 namespace OperationResults.Services.Parameters;
 
 public static partial class ParamsFactory
 {
-    public static OperationParam Create(
-        Action<IOperationResult> operation, 
-        bool finishOperation = true)
+    public static IOperationParam Create(
+        Action<IOperationResult> operation)
     {
-        return new DoOperationParam(operation, finishOperation);
+        return new DoOperationParam(operation);
     }
 
-    public static OperationParam Create<T1>(
+    public static IOperationParam Create<T1>(
         Action<IOperationResult, T1> operation, 
-        T1 value1, 
-        bool finishOperation = true)
+        T1 value1)
     {
-        return new DoOperationParam<T1>(operation, value1, finishOperation);
+        return new DoOperationParam<T1>(operation, value1);
     }
 
-    public static OperationParam Create<T1, T2>(
+    public static IOperationParam Create<T1, T2>(
         Action<IOperationResult, T1, T2> operation, 
         T1 value1, 
-        T2 value2, 
-        bool finishOperation = true)
+        T2 value2)
     {
-        return new DoOperationParam<T1, T2>(operation, value1, value2, finishOperation);
+        return new DoOperationParam<T1, T2>(operation, value1, value2);
     }
 
-    public static OperationParam Create<T1, T2, T3>(
+    public static IOperationParam Create<T1, T2, T3>(
         Action<IOperationResult, T1, T2, T3> operation, 
         T1 value1, 
         T2 value2, 
-        T3 value3, 
-        bool finishOperation = true)
+        T3 value3)
     {
-        return new DoOperationParam<T1, T2, T3>(operation, value1, value2, value3, finishOperation);
+        return new DoOperationParam<T1, T2, T3>(operation, value1, value2, value3);
     }
 
-    public static OperationParam Create(
+    public static ISimpleOperationParam CreateSimple(
         Action operation)
     {
-        return new DoOperationWithResultAutoCompletionParam(operation);
+        return new DoSimpleOperationParam(operation);
     }
 
-    public static OperationParam Create<T1>(
+    public static ISimpleOperationParam CreateSimple<T1>(
         Action<T1> operation, 
         T1 value1)
     {
-        return new DoOperationWithResultAutoCompletionParam<T1>(operation, value1);
+        return new DoSimpleOperationParam<T1>(operation, value1);
     }
 
-    public static OperationParam Create<T1, T2>(
+    public static ISimpleOperationParam CreateSimple<T1, T2>(
         Action<T1, T2> operation, 
         T1 value1, 
         T2 value2)
     {
-        return new DoOperationWithResultAutoCompletionParam<T1, T2>(operation, value1, value2);
+        return new DoSimpleOperationParam<T1, T2>(operation, value1, value2);
     }
 
-    public static OperationParam Create<T1, T2, T3>(
+    public static ISimpleOperationParam CreateSimple<T1, T2, T3>(
         Action<T1, T2, T3> operation, 
         T1 value1, 
         T2 value2, 
         T3 value3)
     {
-        return new DoOperationWithResultAutoCompletionParam<T1, T2, T3>(operation, value1, value2, value3);
+        return new DoSimpleOperationParam<T1, T2, T3>(operation, value1, value2, value3);
     }
 }

@@ -1,69 +1,27 @@
 ﻿using OperationResults.Services.Parameters;
-using OperationResults.Services.Parameters.Interfaces;
+using OperationResults.Services.Parameters.Abstractions;
 
 namespace OperationResults.Services;
 
 public static partial class OperationService
 {
-	public static async Task<IOperationResult> DoOperationAsync(
-		Func<Task> operation)
-	{
-		var operationParam = AsyncParamsFactory.Create(operation);
-		return await DoOperationAsync(operationParam);
-	}
-	
-	public static async Task<IOperationResult> DoOperationAsync(
-		Func<IOperationResult, Task> operation,
-		bool finishOperation = true)
-	{
-		var operationParam = AsyncParamsFactory.Create(operation, finishOperation);
-		return await DoOperationAsync(operationParam);
-	}
-
-	public static async Task<IOperationResult> DoOperationAsync(
-		OperationAsyncParam operation)
-	{
-		var result = OperationResultFactory.Create();
-        try
-        {
-            await operation.InvokeAsync(result);
-            if (operation.FinishOperation)
-	            result.Done();
-        }
-        catch (Exception ex) 
-        {
-            FailOperation(ex, result);
-        }
-		return result;
-	}
-
-	public static async Task<IOperationResult> DoOperationAsync(
-		Func<Task> operation,
-		ILogOperationWithSuffixParam log)
-	{
-		var operationParam = AsyncParamsFactory.Create(operation);
-		return await DoOperationAsync(operationParam, log);
-	}
-	
-    public static async Task<IOperationResult> DoOperationAsync(
-        Func<IOperationResult, Task> operation,
-        ILogOperationWithSuffixParam log,
-        bool finishOperation = true)
+	    public static async Task<IOperationResult> DoOperationAsync(
+        Func<Task> operation,
+        ILogOperationWithSuffixParam? log = null)
     {
-        var operationParam = AsyncParamsFactory.Create(operation, finishOperation);
+        var operationParam = AsyncParamsFactory.CreateSimple(operation);
         return await DoOperationAsync(operationParam, log);
     }
-
+    
     public static async Task<IOperationResult> DoOperationAsync(
-        OperationAsyncParam operation,
-        ILogOperationWithSuffixParam log)
+        ISimpleOperationAsyncParam operation,
+        ILogOperationWithSuffixParam? log = null)
     {
         var result = OperationResultFactory.Create();
         try
         {
-            await operation.InvokeAsync(result);
-            if (operation.FinishOperation)
-	            result.Done();
+            await operation.InvokeAsync();
+            result.Done();
         }
         catch (Exception ex)
         {
@@ -71,66 +29,80 @@ public static partial class OperationService
         }
         return result;
     }
-
-    public static IOperationResult DoOperation(
-	    Action operation)
+    
+    public static async Task<IOperationResult> DoOperationAsync(
+        Func<IOperationResult, Task> operation,
+        ILogOperationWithSuffixParam? log = null,
+        bool finishOperation = true)
     {
-	    var operationParam = ParamsFactory.Create(operation);
-	    return DoOperation(operationParam);
+        var operationParam = AsyncParamsFactory.Create(operation);
+        return await DoOperationAsync(operationParam, log, finishOperation);
+    }
+
+    public static async Task<IOperationResult> DoOperationAsync(
+        IOperationAsyncParam operation,
+        ILogOperationWithSuffixParam? log = null,
+        bool finishOperation = true)
+    {
+        var result = OperationResultFactory.Create();
+        try
+        {
+            await operation.InvokeAsync(result);
+            if (finishOperation)
+                result.Done();
+        }
+        catch (Exception ex)
+        {
+            FailOperation(ex, result, log);
+        }
+        return result;
     }
     
-	public static IOperationResult DoOperation(
-	    Action<IOperationResult> operation,
-	    bool finishOperation = true)
-	{
-		var operationParam = ParamsFactory.Create(operation, finishOperation);
-		return DoOperation(operationParam);
-	}
+    public static IOperationResult DoOperation(
+        Action operation,
+        ILogOperationWithSuffixParam? log = null)
+    {
+        var param = ParamsFactory.CreateSimple(operation);
+        return DoOperation(param, log);
+    }
 
-	public static IOperationResult DoOperation(
-		OperationParam operation)
-	{
-		var result = OperationResultFactory.Create();
-		try
-		{
-			operation.Invoke(result);
-			if (operation.FinishOperation)
-				result.Done();
-		}
-		catch (Exception ex)
-		{
-			FailOperation(ex, result);
-		}
-		return result;
-	}
+    public static IOperationResult DoOperation(
+        ISimpleOperationParam operation,
+        ILogOperationWithSuffixParam? log = null)
+    {
+        var result = OperationResultFactory.Create();
+        try
+        {
+            operation.Invoke();
+            result.Done();
+        }
+        catch (Exception ex)
+        {
+            FailOperation(ex, result, log);
+        }
+        return result;
+    }
+    
+    public static IOperationResult DoOperation(
+        Action<IOperationResult> operation,
+        ILogOperationWithSuffixParam? log = null,
+        bool finishOperation = true)
+    {
+        var param = ParamsFactory.Create(operation);
+        return DoOperation(param, log, finishOperation);
+    }
 
-	public static IOperationResult DoOperation(
-		Action operation,
-		ILogOperationWithSuffixParam log)
-	{
-		var param = ParamsFactory.Create(operation);
-		return DoOperation(param, log);
-	}
-	
-	public static IOperationResult DoOperation(
-		Action<IOperationResult> operation,
-		ILogOperationWithSuffixParam log,
-		bool finishOperation = true)
-	{
-		var param = ParamsFactory.Create(operation, finishOperation);
-		return DoOperation(param, log);
-	}
-
-	public static IOperationResult DoOperation(
-		OperationParam operation,
-		ILogOperationWithSuffixParam log)
+    public static IOperationResult DoOperation(
+        IOperationParam operation,
+        ILogOperationWithSuffixParam? log = null,
+        bool finishOperation = true)
     {
         var result = OperationResultFactory.Create();
         try
         {
             operation.Invoke(result);
-            if (operation.FinishOperation)
-	            result.Done();
+            if (finishOperation)
+                result.Done();
         }
         catch (Exception ex)
         {

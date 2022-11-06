@@ -1,12 +1,10 @@
-﻿using OperationResults.Exceptions;
-
-namespace OperationResults.Tests._OperationResultsGenericTests.ClassTests;
+﻿namespace OperationResults.Tests._OperationResultsGenericTests.ClassTests;
 
 public class OperationResultsGenericTests
 {
     private IOperationResult<string> result = OperationResultFactory.Create<string>();
 
-    private void ReserResult()
+    private void ResetResult()
     {
         result = OperationResultFactory.Create<string>();
     }
@@ -14,7 +12,7 @@ public class OperationResultsGenericTests
     [Fact]
     public void DefaultBehaviour_Success_Test()
     {
-        this.ReserResult();
+        this.ResetResult();
 
         using var _ = new AssertionScope();
         this.result.State.Should().Be(OperationResultState.Processing);
@@ -25,7 +23,7 @@ public class OperationResultsGenericTests
     [Fact]
     public void DoneOperationResult_Success_Test()
     {
-        this.ReserResult();
+        this.ResetResult();
 
         var str = string.Empty;
 
@@ -41,7 +39,7 @@ public class OperationResultsGenericTests
     [Fact]
     public void FailOperationResult_Success_Test()
     {
-        this.ReserResult();
+        this.ResetResult();
 
         var ex = new Exception("Test");
 
@@ -57,7 +55,7 @@ public class OperationResultsGenericTests
     [Fact]
     public void NotFoundOperationResult_Success_Test()
     {
-        this.ReserResult();
+        this.ResetResult();
 
         this.result.NotFound();
 
@@ -70,7 +68,7 @@ public class OperationResultsGenericTests
     [Fact]
     public void FailOperationResult_NullException_Test()
     {
-        this.ReserResult();
+        this.ResetResult();
 
         this.result.Fail(null);
 
@@ -83,7 +81,7 @@ public class OperationResultsGenericTests
     [Fact]
     public void DoneOperationResult_NullResult_Test()
     {
-        this.ReserResult();
+        this.ResetResult();
 
         this.result.Done(null);
 
@@ -91,5 +89,26 @@ public class OperationResultsGenericTests
         this.result.State.Should().Be(OperationResultState.Ok);
         this.result.Invoking(x => x.Result).Should().Throw<OperationResultNullException>();
         this.result.Invoking(x => x.Exception).Should().Throw<IncorrectOperationResultStateException>();
+    }
+
+    [Fact]
+    public void DoneOperationResult_TryChangeStateFromFailToDone_WhenItIsImpossible()
+    {
+        this.ResetResult();
+        
+        this.result.Fail(new Exception("Test"));
+
+        using (var _ = new AssertionScope())
+        {
+            this.result.State.Should().Be(OperationResultState.BadFlow);
+        }
+        
+        this.result.Done("Test");
+
+        using (var _ = new AssertionScope())
+        {
+            this.result.State.Should().NotBe(OperationResultState.Ok);
+            this.result.State.Should().Be(OperationResultState.BadFlow);
+        }
     }
 }

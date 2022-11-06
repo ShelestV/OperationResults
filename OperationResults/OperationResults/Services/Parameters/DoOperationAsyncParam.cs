@@ -1,84 +1,76 @@
-﻿using OperationResults.Services.Parameters.Interfaces;
+﻿using OperationResults.Services.Parameters.Abstractions;
 
 namespace OperationResults.Services.Parameters;
 
-public sealed class DoOperationAsyncParam : OperationAsyncParam
+public sealed class DoOperationAsyncParam : IOperationAsyncParam
 {
     private readonly Func<IOperationResult, Task> operation;
     
-    public DoOperationAsyncParam(
-        Func<IOperationResult, Task> operation, 
-        bool finishOperation = true) 
-        : base(finishOperation)
+    internal DoOperationAsyncParam(
+        Func<IOperationResult, Task> operation) 
     {
         this.operation = operation;
     }
 
-    public override async Task InvokeAsync(IOperationResult result)
+    public async Task InvokeAsync(IOperationResult result)
     {
         await this.operation.Invoke(result);
     }
 }
 
-public sealed class DoOperationAsyncParam<T1> : OperationAsyncParam
+public sealed class DoOperationAsyncParam<T1> : IOperationAsyncParam
 {
     private readonly Func<IOperationResult, T1, Task> operation;
     private readonly T1 value1;
     
-    public DoOperationAsyncParam(
+    internal DoOperationAsyncParam(
         Func<IOperationResult, T1, Task> operation, 
-        T1 value1, 
-        bool finishOperation = true) 
-        : base(finishOperation)
+        T1 value1)
     {
         this.operation = operation;
         this.value1 = value1;
     }
 
-    public override async Task InvokeAsync(IOperationResult result)
+    public async Task InvokeAsync(IOperationResult result)
     {
         await this.operation.Invoke(result, this.value1);
     }
 }
 
-public sealed class DoOperationAsyncParam<T1, T2> : OperationAsyncParam
+public sealed class DoOperationAsyncParam<T1, T2> : IOperationAsyncParam
 {
     private readonly Func<IOperationResult, T1, T2, Task> operation;
     private readonly T1 value1;
     private readonly T2 value2;
     
-    public DoOperationAsyncParam(
+    internal DoOperationAsyncParam(
         Func<IOperationResult, T1, T2, Task> operation,
         T1 value1,
-        T2 value2,
-        bool finishOperation = true)
-        : base(finishOperation)
+        T2 value2)
     {
         this.operation = operation;
         this.value1 = value1;
         this.value2 = value2;
     }
 
-    public override async Task InvokeAsync(IOperationResult result)
+    public async Task InvokeAsync(IOperationResult result)
     {
         await this.operation.Invoke(result, this.value1, this.value2);
     }
 }
 
-public sealed class DoOperationAsyncParam<T1, T2, T3> : OperationAsyncParam
+public sealed class DoOperationAsyncParam<T1, T2, T3> : IOperationAsyncParam
 {
     private readonly Func<IOperationResult, T1, T2, T3, Task> operation;
     private readonly T1 value1;
     private readonly T2 value2;
     private readonly T3 value3;
     
-    public DoOperationAsyncParam(
+    internal DoOperationAsyncParam(
         Func<IOperationResult, T1, T2, T3, Task> operation,
         T1 value1,
         T2 value2,
-        T3 value3,
-        bool finishOperation = true)
-        : base(finishOperation)
+        T3 value3)
     {
         this.operation = operation;
         this.value1 = value1;
@@ -86,7 +78,7 @@ public sealed class DoOperationAsyncParam<T1, T2, T3> : OperationAsyncParam
         this.value3 = value3;
     }
 
-    public override async Task InvokeAsync(IOperationResult result)
+    public async Task InvokeAsync(IOperationResult result)
     {
         await this.operation.Invoke(result, this.value1, this.value2, this.value3);
     }

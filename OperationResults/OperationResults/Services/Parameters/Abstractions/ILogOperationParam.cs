@@ -1,4 +1,4 @@
-﻿namespace OperationResults.Services.Parameters.Interfaces;
+﻿namespace OperationResults.Services.Parameters.Abstractions;
 
 public interface ILogOperationParam
 {
