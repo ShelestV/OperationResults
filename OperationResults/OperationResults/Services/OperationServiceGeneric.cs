@@ -7,7 +7,7 @@ namespace OperationResults.Services;
 public static partial class OperationService
 {
 	public static async Task<IOperationResult<TResult>> DoOperationWithResultAsync<TResult>(
-		Func<Task<TResult>> operation,
+		Func<Task<TResult?>> operation,
 		ILogOperationWithSuffixParam? log = null)
 	{
 		var operationParam = AsyncParamsFactory.CreateSimpleWithResult(operation);

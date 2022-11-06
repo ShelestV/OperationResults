@@ -36,20 +36,20 @@ public static partial class AsyncParamsFactory
 	}
 
 	public static ISimpleOperationAsyncParam<TResult> CreateSimpleWithResult<TResult>(
-		Func<Task<TResult>> operation)
+		Func<Task<TResult?>> operation)
 	{
 		return new Generic.DoSimpleOperationAsyncParam<TResult>(operation);
 	}
 
 	public static ISimpleOperationAsyncParam<TResult> CreateSimpleWithResult<TResult, T1>(
-		Func<T1, Task<TResult>> operation,
+		Func<T1, Task<TResult?>> operation,
 		T1 value1)
 	{
 		return new Generic.DoSimpleOperationAsyncParam<TResult, T1>(operation, value1);
 	}
 
 	public static ISimpleOperationAsyncParam<TResult> CreateSimpleWithResult<TResult, T1, T2>(
-		Func<T1, T2, Task<TResult>> operation,
+		Func<T1, T2, Task<TResult?>> operation,
 		T1 value1,
 		T2 value2)
 	{
@@ -57,7 +57,7 @@ public static partial class AsyncParamsFactory
 	}
 
 	public static ISimpleOperationAsyncParam<TResult> CreateSimpleWithResult<TResult, T1, T2, T3>(
-		Func<T1, T2, T3, Task<TResult>> operation, 
+		Func<T1, T2, T3, Task<TResult?>> operation, 
 		T1 value1,
 		T2 value2,
 		T3 value3)
