@@ -3,11 +3,11 @@ using OperationResults.Services.Parameters.Abstractions;
 
 namespace OperationResults.Services.Parameters.Generic;
 
-public sealed class DoOperationAsyncParam<TResult> : IOperationAsyncParam<TResult>
+public sealed class AsyncParam<TResult> : IOperationAsyncParam<TResult>
 {
     private readonly Func<IOperationResult<TResult>, Task> operation;
 
-    internal DoOperationAsyncParam(
+    internal AsyncParam(
         Func<IOperationResult<TResult>, Task> operation)
     {
         this.operation = operation;
@@ -19,12 +19,12 @@ public sealed class DoOperationAsyncParam<TResult> : IOperationAsyncParam<TResul
     }
 }
 
-public sealed class DoOperationAsyncParam<TResult, T1> : IOperationAsyncParam<TResult>
+public sealed class AsyncParam<TResult, T1> : IOperationAsyncParam<TResult>
 {
     private readonly Func<IOperationResult<TResult>, T1, Task> operation;
     private readonly T1 value1;
     
-    internal DoOperationAsyncParam(
+    internal AsyncParam(
         Func<IOperationResult<TResult>, T1, Task> operation,
         T1 value1)
     {
@@ -38,13 +38,13 @@ public sealed class DoOperationAsyncParam<TResult, T1> : IOperationAsyncParam<TR
     }
 }
 
-public sealed class DoOperationAsyncParam<TResult, T1, T2> : IOperationAsyncParam<TResult>
+public sealed class AsyncParam<TResult, T1, T2> : IOperationAsyncParam<TResult>
 {
     private readonly Func<IOperationResult<TResult>, T1, T2, Task> operation;
     private readonly T1 value1;
     private readonly T2 value2;
     
-    internal DoOperationAsyncParam(
+    internal AsyncParam(
         Func<IOperationResult<TResult>, T1, T2, Task> operation,
         T1 value1,
         T2 value2)
@@ -60,14 +60,14 @@ public sealed class DoOperationAsyncParam<TResult, T1, T2> : IOperationAsyncPara
     }
 }
 
-public sealed class DoOperationAsyncParam<TResult, T1, T2, T3> : IOperationAsyncParam<TResult>
+public sealed class AsyncParam<TResult, T1, T2, T3> : IOperationAsyncParam<TResult>
 {
     private readonly Func<IOperationResult<TResult>, T1, T2, T3, Task> operation;
     private readonly T1 value1;
     private readonly T2 value2;
     private readonly T3 value3;
     
-    internal DoOperationAsyncParam(
+    internal AsyncParam(
         Func<IOperationResult<TResult>, T1, T2, T3, Task> operation,
         T1 value1,
         T2 value2,

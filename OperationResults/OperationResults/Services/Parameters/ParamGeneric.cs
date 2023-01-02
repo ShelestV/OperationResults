@@ -3,11 +3,11 @@ using OperationResults.Services.Parameters.Abstractions;
 
 namespace OperationResults.Services.Parameters.Generic;
 
-public sealed class DoOperationParam<TResult> : IOperationParam<TResult>
+public sealed class Param<TResult> : IOperationParam<TResult>
 {
     private readonly Action<IOperationResult<TResult>> operation;
 
-    internal DoOperationParam(
+    internal Param(
         Action<IOperationResult<TResult>> operation)
     {
         this.operation = operation;
@@ -19,12 +19,12 @@ public sealed class DoOperationParam<TResult> : IOperationParam<TResult>
     }
 }
 
-public sealed class DoOperationParam<TResult, T1> : IOperationParam<TResult>
+public sealed class Param<TResult, T1> : IOperationParam<TResult>
 {
     private readonly Action<IOperationResult<TResult>, T1> operation;
     private readonly T1 value1;
 
-    internal DoOperationParam(
+    internal Param(
         Action<IOperationResult<TResult>, T1> operation, 
         T1 value1)
     {
@@ -38,13 +38,13 @@ public sealed class DoOperationParam<TResult, T1> : IOperationParam<TResult>
     }
 }
 
-public sealed class DoOperationParam<TResult, T1, T2> : IOperationParam<TResult>
+public sealed class Param<TResult, T1, T2> : IOperationParam<TResult>
 {
     private readonly Action<IOperationResult<TResult>, T1, T2> operation;
     private readonly T1 value1;
     private readonly T2 value2;
 
-    internal DoOperationParam(
+    internal Param(
         Action<IOperationResult<TResult>, T1, T2> operation, 
         T1 value1, 
         T2 value2)
@@ -60,14 +60,14 @@ public sealed class DoOperationParam<TResult, T1, T2> : IOperationParam<TResult>
     }
 }
 
-public sealed class DoOperationParam<TResult, T1, T2, T3> : IOperationParam<TResult>
+public sealed class Param<TResult, T1, T2, T3> : IOperationParam<TResult>
 {
     private readonly Action<IOperationResult<TResult>, T1, T2, T3> operation;
     private readonly T1 value1;
     private readonly T2 value2;
     private readonly T3 value3;
 
-    internal DoOperationParam(
+    internal Param(
         Action<IOperationResult<TResult>, T1, T2, T3> operation, 
         T1 value1, 
         T2 value2, 
