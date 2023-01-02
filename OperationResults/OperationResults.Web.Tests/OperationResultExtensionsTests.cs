@@ -65,7 +65,7 @@ public class OperationResultExtensionsTests
 
         var badRequestResult = webResult as BadRequestObjectResult;
         badRequestResult!.StatusCode.Should().Be(400);
-        badRequestResult!.Value.Should().BeOfType<OperationStillProcessingException>();
+        badRequestResult.Value.Should().BeOfType<OperationStillProcessingException>();
     }
     #endregion
 
@@ -119,7 +119,7 @@ public class OperationResultExtensionsTests
 
         var badRequestResult = webResult as BadRequestObjectResult;
         badRequestResult!.StatusCode.Should().Be(400);
-        badRequestResult!.Value.Should().BeOfType<OperationStillProcessingException>();
+        badRequestResult.Value.Should().BeOfType<OperationStillProcessingException>();
     }
     #endregion
     
@@ -139,7 +139,7 @@ public class OperationResultExtensionsTests
 
         var okResult = webResult as OkObjectResult;
         okResult!.StatusCode.Should().Be(200);
-        okResult!.Value.Should().Be(operationResult);
+        okResult.Value.Should().Be(operationResult);
     }
     
     [Fact]
@@ -186,7 +186,7 @@ public class OperationResultExtensionsTests
 
         var badRequestResult = webResult as BadRequestObjectResult;
         badRequestResult!.StatusCode.Should().Be(400);
-        badRequestResult!.Value.Should().BeOfType<OperationStillProcessingException>();
+        badRequestResult.Value.Should().BeOfType<OperationStillProcessingException>();
     }
     #endregion
 
@@ -196,14 +196,14 @@ public class OperationResultExtensionsTests
     {
         const string operationResult = "Test";
         
-        var webResult = await OperationService.DoOperationWithResultAsync(() => Task.FromResult(operationResult)).ToActionResult();
+        var webResult = await OperationService.DoOperationWithResultAsync(() => Task.FromResult(operationResult)!).ToActionResult();
 
         using var _ = new AssertionScope();
         webResult.Should().BeOfType<OkObjectResult>();
 
         var okResult = webResult as OkObjectResult;
         okResult!.StatusCode.Should().Be(200);
-        okResult!.Value.Should().Be(operationResult);
+        okResult.Value.Should().Be(operationResult);
     }
     
     [Fact]
@@ -243,7 +243,7 @@ public class OperationResultExtensionsTests
 
         var badRequestResult = webResult as BadRequestObjectResult;
         badRequestResult!.StatusCode.Should().Be(400);
-        badRequestResult!.Value.Should().BeOfType<OperationStillProcessingException>();
+        badRequestResult.Value.Should().BeOfType<OperationStillProcessingException>();
     }
     #endregion
 }

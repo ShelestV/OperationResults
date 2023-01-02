@@ -415,7 +415,7 @@ public class OperationServicesCallingTests
     [Fact]
     public async Task DoOperationWithResultAsync_SimpleOperationParam_WithoutParameters_WithoutLog_Test()
     {
-        var param = AsyncParamsFactory.CreateSimpleWithResult(() => Task.FromResult(Result));
+        var param = AsyncParamsFactory.CreateSimpleWithResult(() => Task.FromResult(Result)!);
         var result = await OperationService.DoOperationWithResultAsync(param);
 
         using var _ = new AssertionScope();
@@ -425,7 +425,7 @@ public class OperationServicesCallingTests
     [Fact]
     public async Task DoOperationWithResultAsync_SimpleFunc_WithoutParameters_WithoutLog_Test()
     {
-        var result = await OperationService.DoOperationWithResultAsync(() => Task.FromResult(Result));
+        var result = await OperationService.DoOperationWithResultAsync(() => Task.FromResult(Result)!);
 
         using var _ = new AssertionScope();
         result.State.Should().Be(OperationResultState.Ok);
@@ -434,7 +434,7 @@ public class OperationServicesCallingTests
     [Fact]
     public async Task DoOperationWithResultAsync_SimpleMethod_WithoutParameters_WithoutLog_Test()
     {
-        var result = await OperationService.DoOperationWithResultAsync(DoWithResultWithoutOperationResultAsync);
+        var result = await OperationService.DoOperationWithResultAsync(DoWithResultWithoutOperationResultAsync!);
 
         using var _ = new AssertionScope();
         result.State.Should().Be(OperationResultState.Ok);
@@ -479,7 +479,7 @@ public class OperationServicesCallingTests
     [Fact]
     public async Task DoOperationWithResultAsync_SimpleOperationParam_WithoutParameters_WithLog_Test()
     {
-        var param = AsyncParamsFactory.CreateSimpleWithResult(() => Task.FromResult(Result));
+        var param = AsyncParamsFactory.CreateSimpleWithResult(() => Task.FromResult(Result)!);
         var logParam = LogParamsFactory.Create(LogError);
         
         var result = await OperationService.DoOperationWithResultAsync(param, logParam);
@@ -493,7 +493,7 @@ public class OperationServicesCallingTests
     {
         var logParam = LogParamsFactory.Create(LogError);
         
-        var result = await OperationService.DoOperationWithResultAsync(() => Task.FromResult(Result), logParam);
+        var result = await OperationService.DoOperationWithResultAsync(() => Task.FromResult(Result)!, logParam);
 
         using var _ = new AssertionScope();
         result.State.Should().Be(OperationResultState.Ok);
@@ -504,7 +504,7 @@ public class OperationServicesCallingTests
     {
         var logParam = LogParamsFactory.Create(LogError);
         
-        var result = await OperationService.DoOperationWithResultAsync(DoWithResultWithoutOperationResultAsync, logParam);
+        var result = await OperationService.DoOperationWithResultAsync(DoWithResultWithoutOperationResultAsync!, logParam);
 
         using var _ = new AssertionScope();
         result.State.Should().Be(OperationResultState.Ok);

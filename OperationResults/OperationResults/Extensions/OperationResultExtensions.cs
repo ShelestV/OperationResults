@@ -74,21 +74,69 @@ public static class OperationResultExtensions
 		IOperationResult<TResult> operationResult, 
 		TResult? result)
 	{
-		if (EqualityComparer<TResult>.Default.Equals(result, default(TResult)))
+		if (EqualityComparer<TResult>.Default.Equals(result, default))
 			operationResult.Fail(new ArgumentException("Operation result is invalid"));
 		else
 			operationResult.Done(result!);
 	}
 
-	public static bool IsCorrect<TResult>(
-		this IOperationResult<TResult> result)
+	public static bool IsCorrect<TResult>(this IOperationResult<TResult> result)
 	{
-		return result.State == OperationResultState.Ok;
+		return result.State is OperationResultState.Ok;
 	}
 
-	public static bool IsCorrect(
-		this IOperationResult result)
+	public static bool IsCorrect(this IOperationResult result)
 	{
-		return result.State == OperationResultState.Ok;
+		return result.State is OperationResultState.Ok;
+	}
+
+	public static bool IsNotFound<TResult>(this IOperationResult<TResult> result)
+	{
+		return result.State is OperationResultState.NotFound;
+	}
+	
+	public static bool IsNotFound(this IOperationResult result)
+	{
+		return result.State is OperationResultState.NotFound;
+	}
+
+	public static bool IsFailed<TResult>(this IOperationResult<TResult> result)
+	{
+		return result.State is OperationResultState.BadFlow;
+	}
+	
+	public static bool IsFailed(this IOperationResult result)
+	{
+		return result.State is OperationResultState.BadFlow;
+	}
+
+	public static bool IsStillProcessing<TResult>(this IOperationResult<TResult> result)
+	{
+		return result.State is OperationResultState.Processing;
+	}
+
+	public static bool IsStillProcessing(this IOperationResult result)
+	{
+		return result.State is OperationResultState.Processing;
+	}
+
+	public static bool IsCorrectOrNotFound<TResult>(this IOperationResult<TResult> result)
+	{
+		return result.State is OperationResultState.Ok or OperationResultState.NotFound;
+	}
+
+	public static bool IsCorrectOrNotFound(this IOperationResult result)
+	{
+		return result.State is OperationResultState.Ok or OperationResultState.NotFound;
+	}
+
+	public static bool IsFailedOrNotFound<TResult>(this IOperationResult<TResult> result)
+	{
+		return result.State is OperationResultState.BadFlow or OperationResultState.NotFound;
+	}
+
+	public static bool IsFailedOrNotFound(this IOperationResult result)
+	{
+		return result.State is OperationResultState.BadFlow or OperationResultState.NotFound;
 	}
 }
