@@ -5,7 +5,7 @@ namespace OperationResults.Services;
 
 public static partial class OperationService
 {
-	    public static async Task<IOperationResult> DoOperationAsync(
+    public static async Task<IOperationResult> DoOperationAsync(
         Func<Task> operation,
         ILogOperationWithSuffixParam? log = null)
     {
