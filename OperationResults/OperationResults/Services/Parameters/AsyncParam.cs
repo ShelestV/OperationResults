@@ -2,11 +2,11 @@
 
 namespace OperationResults.Services.Parameters;
 
-public sealed class DoOperationAsyncParam : IOperationAsyncParam
+public sealed class AsyncParam : IOperationAsyncParam
 {
     private readonly Func<IOperationResult, Task> operation;
     
-    internal DoOperationAsyncParam(
+    internal AsyncParam(
         Func<IOperationResult, Task> operation) 
     {
         this.operation = operation;
@@ -18,12 +18,12 @@ public sealed class DoOperationAsyncParam : IOperationAsyncParam
     }
 }
 
-public sealed class DoOperationAsyncParam<T1> : IOperationAsyncParam
+public sealed class AsyncParam<T1> : IOperationAsyncParam
 {
     private readonly Func<IOperationResult, T1, Task> operation;
     private readonly T1 value1;
     
-    internal DoOperationAsyncParam(
+    internal AsyncParam(
         Func<IOperationResult, T1, Task> operation, 
         T1 value1)
     {
@@ -37,13 +37,13 @@ public sealed class DoOperationAsyncParam<T1> : IOperationAsyncParam
     }
 }
 
-public sealed class DoOperationAsyncParam<T1, T2> : IOperationAsyncParam
+public sealed class AsyncParam<T1, T2> : IOperationAsyncParam
 {
     private readonly Func<IOperationResult, T1, T2, Task> operation;
     private readonly T1 value1;
     private readonly T2 value2;
     
-    internal DoOperationAsyncParam(
+    internal AsyncParam(
         Func<IOperationResult, T1, T2, Task> operation,
         T1 value1,
         T2 value2)
@@ -59,14 +59,14 @@ public sealed class DoOperationAsyncParam<T1, T2> : IOperationAsyncParam
     }
 }
 
-public sealed class DoOperationAsyncParam<T1, T2, T3> : IOperationAsyncParam
+public sealed class AsyncParam<T1, T2, T3> : IOperationAsyncParam
 {
     private readonly Func<IOperationResult, T1, T2, T3, Task> operation;
     private readonly T1 value1;
     private readonly T2 value2;
     private readonly T3 value3;
     
-    internal DoOperationAsyncParam(
+    internal AsyncParam(
         Func<IOperationResult, T1, T2, T3, Task> operation,
         T1 value1,
         T2 value2,

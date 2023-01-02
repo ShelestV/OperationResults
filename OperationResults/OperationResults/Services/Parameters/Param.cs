@@ -2,11 +2,11 @@
 
 namespace OperationResults.Services.Parameters;
 
-public sealed class DoOperationParam : IOperationParam
+public sealed class Param : IOperationParam
 {
     private readonly Action<IOperationResult> operation;
 
-    internal DoOperationParam(
+    internal Param(
         Action<IOperationResult> operation)
     {
         this.operation = operation;
@@ -18,12 +18,12 @@ public sealed class DoOperationParam : IOperationParam
     }
 }
 
-public sealed class DoOperationParam<T1> : IOperationParam
+public sealed class Param<T1> : IOperationParam
 {
     private readonly Action<IOperationResult, T1> operation;
     private readonly T1 value1;
 
-    internal DoOperationParam(
+    internal Param(
         Action<IOperationResult, T1> operation, 
         T1 value1)
     {
@@ -37,13 +37,13 @@ public sealed class DoOperationParam<T1> : IOperationParam
     }
 }
 
-public sealed class DoOperationParam<T1, T2> : IOperationParam
+public sealed class Param<T1, T2> : IOperationParam
 {
     private readonly Action<IOperationResult, T1, T2> operation;
     private readonly T1 value1;
     private readonly T2 value2;
 
-    internal DoOperationParam(
+    internal Param(
         Action<IOperationResult, T1, T2> operation, 
         T1 value1, 
         T2 value2)
@@ -59,14 +59,14 @@ public sealed class DoOperationParam<T1, T2> : IOperationParam
     }
 }
 
-public sealed class DoOperationParam<T1, T2, T3> : IOperationParam
+public sealed class Param<T1, T2, T3> : IOperationParam
 {
     private readonly Action<IOperationResult, T1, T2, T3> operation;
     private readonly T1 value1;
     private readonly T2 value2;
     private readonly T3 value3;
 
-    internal DoOperationParam(
+    internal Param(
         Action<IOperationResult, T1, T2, T3> operation, 
         T1 value1, 
         T2 value2, 
