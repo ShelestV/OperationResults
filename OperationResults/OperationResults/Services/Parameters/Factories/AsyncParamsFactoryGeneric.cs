@@ -36,32 +36,36 @@ public static partial class AsyncParamsFactory
 	}
 
 	public static ISimpleOperationAsyncParam<TResult> CreateSimpleWithResult<TResult>(
-		Func<Task<TResult?>> operation)
+		Func<Task<TResult?>> operation,
+		bool shouldThrowNullException = false)
 	{
-		return new Generic.SimpleAsyncParam<TResult>(operation);
+		return new Generic.SimpleAsyncParam<TResult>(operation, shouldThrowNullException);
 	}
 
 	public static ISimpleOperationAsyncParam<TResult> CreateSimpleWithResult<TResult, T1>(
 		Func<T1, Task<TResult?>> operation,
-		T1 value1)
+		T1 value1,
+		bool shouldThrowNullException = false)
 	{
-		return new Generic.SimpleAsyncParam<TResult, T1>(operation, value1);
+		return new Generic.SimpleAsyncParam<TResult, T1>(operation, value1, shouldThrowNullException);
 	}
 
 	public static ISimpleOperationAsyncParam<TResult> CreateSimpleWithResult<TResult, T1, T2>(
 		Func<T1, T2, Task<TResult?>> operation,
 		T1 value1,
-		T2 value2)
+		T2 value2,
+		bool shouldThrowNullException = false)
 	{
-		return new Generic.SimpleAsyncParam<TResult, T1, T2>(operation, value1, value2);
+		return new Generic.SimpleAsyncParam<TResult, T1, T2>(operation, value1, value2, shouldThrowNullException);
 	}
 
 	public static ISimpleOperationAsyncParam<TResult> CreateSimpleWithResult<TResult, T1, T2, T3>(
 		Func<T1, T2, T3, Task<TResult?>> operation, 
 		T1 value1,
 		T2 value2,
-		T3 value3)
+		T3 value3,
+		bool shouldThrowNullException = false)
 	{
-		return new Generic.SimpleAsyncParam<TResult, T1, T2, T3>(operation, value1, value2, value3);
+		return new Generic.SimpleAsyncParam<TResult, T1, T2, T3>(operation, value1, value2, value3, shouldThrowNullException);
 	}
 }
